@@ -12,10 +12,10 @@ Create a runnable AICE-style mock exam package from a Kaggle source. Mirror the 
 Always create all of the following under a dataset-specific folder in the workspace notebook area:
 
 - `<slug>.ipynb` for the exam paper
-- `<slug>_solution.ipynb` for the worked solution
+- `<slug>_solution.ipynb` for the worked solution (Reference Solution)
 - `data/raw/`
 - `data/submissions/`
-- `tests/validate_notebook.py`
+
 
 If Docker is available, prefer Docker execution and keep the exact command you used ready for the final response.
 
@@ -39,25 +39,25 @@ Make it look like a real exam sheet: scenario text, cautions, column table, scor
 6. Derive the solution notebook from the problem notebook.
 Keep the same question order and same structure, then fill in code, answers, and short explanations.
 
-7. Add validation after the notebooks exist.
-Execute the solution notebook end to end and verify outputs, required `answer_*` variables, metrics, and submission file structure.
+7. Verify the package.
+Confirm that the solution notebook is runnable and contains the expected model answers and outputs. Ensure the notebooks share the same question order.
 
-8. Verify end to end.
-If Python or Docker is available, run the validation script yourself before finishing.
 
 ## Hard Rules
 
 - Keep exactly 14 scored questions. Count subparts carefully.
+- Follow the official point distribution: Data Analysis (30pt), Preprocessing (30pt), and AI Modeling (40pt).
 - Prefer any user-provided sample exam over generic defaults. Match its tone, section headers, point style, and cell conventions unless the user says otherwise.
 - Write notebook text in Korean unless the user asks for another language.
 - Include exam front matter: title, domain, goal, scenario, cautions, and a column description table tied to the actual dataset.
-- Use mixed A/B/C/D question types across the paper. Do not make all 14 questions direct coding tasks.
+- Primarily use direct coding (Type A) for questions. Optionally use mixed B/C/D types to add variety when appropriate for the dataset.
+
 - Insert setup cells before visualization sections or TensorFlow sections when needed.
 - Use concrete file names, paths, and column names. Do not leave placeholders once the dataset is known.
 - Check each preprocessing step against the real data before committing to it. Never emit instructions that would obviously collapse the dataset, such as a blind `dropna()` if it would remove nearly all rows.
 - Align metrics with the task. Use the competition metric when available and stable. Add a secondary teaching metric only when it improves clarity.
 - Keep the solution notebook executable from top to bottom with the repo's available packages whenever feasible.
-- Keep `answer_*` variable names stable in the solution notebook for deterministic validation.
+
 - Do not use JSON artifacts as a substitute for the worked solution notebook. The solution notebook itself must contain the completed code and visible outputs.
 - Do not stop at a scaffold if local data is already available or can be downloaded in the current environment.
 
@@ -67,13 +67,11 @@ Many AICE samples include at least one neural-network question. Include a small 
 
 Only omit deep learning when it is genuinely unrealistic or harmful for the task. If you omit it, replace it with another modeling or interpretation question and state the reason in the solution notebook.
 
-## Validation Expectations
+## Verification Expectations
 
-- Execute the solution notebook from start to finish.
-- Verify required `answer_*` variables and key numeric outputs.
-- Verify metric artifacts if the notebook writes them.
-- Verify submission file schema and row count when the dataset supports submission generation.
+- Ensure the solution notebook reflects correct answers for the dataset.
 - Verify both notebooks exist and share the same question order.
+
 
 ## Reference
 

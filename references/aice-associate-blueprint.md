@@ -2,17 +2,15 @@
 
 Use this file as the contract for drafting or reviewing an AICE-style notebook package.
 
-## Non-Negotiable Package Shape
+## Core Package Shape
 
 Always create:
 
 - one problem notebook
-- one solution notebook
+- one solution notebook (Reference Solution)
 - `data/raw/`
 - `data/submissions/`
-- `tests/validate_notebook.py`
 
-Do not treat a single notebook as complete output.
 
 ## Notebook Pair Contract
 
@@ -40,9 +38,9 @@ Keep the same question order and almost the same cell layout as the problem note
 Add:
 
 - completed code
-- `answer_*` variables for deterministic checks
-- short explanations where the student would need interpretation
 - visible outputs for charts, metrics, and final submission generation
+- short explanations of the logic (Reference Answer style)
+
 
 Do not turn the solution notebook into a long-form tutorial. Keep the style exam-like.
 
@@ -59,11 +57,11 @@ Write the following before question 1:
 
 If the user provides a sample exam, mirror its tone and layout first.
 
-## Question Types
+## Question Variety (Types)
 
-Mix these four types across the paper.
+The exam should primarily consist of direct coding, with other types used optionally to mirror the AICE sample style where appropriate.
 
-### Type A: direct coding
+### Type A: direct coding (Primary)
 
 Use for imports, loading data, plotting, splitting data, fitting models.
 
@@ -73,19 +71,11 @@ Typical prompt marker:
 # (N) Write the answer code here and run it.
 ```
 
-### Type B: bug fixing
+### Type B: bug fixing (Optional/Strategic)
 
-Provide starter code with real mistakes, then ask the student to correct it.
+If specific dataset steps are prone to common errors, provide starter code with intentional mistakes for the student to correct. Treat this as a secondary type to add flavor, not a hard requirement for every paper.
 
-Typical mistakes:
-
-- wrong method name
-- wrong metric import
-- wrong `fit_transform` / `transform` use
-- wrong attribute such as `feature_importances_`
-- wrong prediction target or wrong split variable
-
-### Type C: fill in the blanks
+### Type C: fill in the blanks (Optional)
 
 Use placeholders like `<#7-1>` inside a code cell plus separate answer cells.
 
@@ -95,29 +85,50 @@ Ask the student to read a chart, metric, or table and type the result in a text-
 
 Do not make all text-answer questions trivial. Tie them to actual plots or model outputs.
 
-## Section Plan
+## Section Plan (Total 100 points, 14 questions, 90 mins)
 
-Keep exactly 14 scored questions.
+Follow this official distribution and point structure:
 
-Use one of these valid mixes:
+### 1. 데이터 분석 (Data Analysis) [5~6문항 / 30점]
+- 필요 라이브러리 설치 (`import`)
+- 데이터 구성 및 특성 파악 (`shape`, `info`, `describe`, `head`)
+- 데이터 품질 점검 및 시각화 (기본 EDA, 상관관계 등)
 
-- 6 data analysis / 4 preprocessing / 4 modeling
-- 5 data analysis / 5 preprocessing / 4 modeling
-- 5 data analysis / 4 preprocessing / 5 modeling
+### 2. 데이터 전처리 (Data Preprocessing) [4~5문항 / 30점]
+- 데이터 결측치/이상치 처리 (`isnull`, `dropna`, `fillna`, `outliers`)
+- 데이터 스케일링 및 변환 (`StandardScaler`, `MinMaxScaler`)
+- 라벨 인코딩 / 원핫 인코딩 (`LabelEncoder`, `get_dummies`)
+- 데이터셋 분할 (`train_test_split`)
 
-Prefer this order unless the dataset strongly suggests another order:
+### 3. AI 모델링 (AI Modeling) [4~5문항 / 40점]
+- 머신러닝 모델 학습 (Linear, Tree, Ensemble 등)
+- 딥러닝 모델 학습 (Artificial Neural Networks)
+- 모델 성능 평가 및 시뮬레이션 (MSE, MAE, R2, Accuracy, F1 등)
+- 모델 성능 개선 및 그래픽 출력 (Feature Importance, History plots)
 
-1. imports and data loading
-2. basic shape and schema checks
-3. one or two EDA plots
-4. missing values / duplicates / simple statistics
-5. preprocessing
-6. encoding or scaling
-7. train/validation split
-8. machine-learning models
-9. feature importance or error analysis
-10. deep learning or training-history interpretation
-11. final prediction or submission generation
+### 4. 문항 분배 전략 (Question Distribution Strategy)
+The AI must balance the 14 questions within these official ranges based on the dataset's complexity:
+- **Data Analysis**: 5 or 6 questions
+- **Data Preprocessing**: 4 or 5 questions
+- **AI Modeling**: 4 or 5 questions
+
+### Example 14-Question Layout (5-4-5 Split)
+Below is one standard anchor layout. The AI may shift 1 question between sections (e.g., to a 6-4-4 or 5-5-4 split) if the dataset requires more analysis or preprocessing steps.
+
+1. **[Analysis]** Library imports and data loading (A)
+2. **[Analysis]** Data shape and basic schema check (A/D)
+3. **[Analysis]** Target value distribution or summary stats (A/D)
+4. **[Analysis]** Feature correlation or group-by analysis (A/D)
+5. **[Analysis]** EDA Visualization (Chart reading) (D/A)
+6. **[Preprocessing]** Handling missing values or outliers (A/B)
+7. **[Preprocessing]** Categorical encoding (A/C)
+8. **[Preprocessing]** Feature scaling (B/C)
+9. **[Preprocessing]** Train/Test split (A)
+10. **[Modeling]** ML regressor/classifier training (A)
+11. **[Modeling]** ML performance evaluation (D/A)
+12. **[Modeling]** Deep Learning model construction (C/A)
+13. **[Modeling]** training history visualization/interpretation (D)
+14. **[Modeling]** Final test prediction or Feature Importance (A/D)
 
 ## Dataset Adaptation Guardrails
 
@@ -153,19 +164,7 @@ If deep learning is unrealistic for the dataset or environment, replace it with 
 - Use concrete paths, not placeholders, once the dataset is known.
 - Keep point labels and section labels explicit.
 - Use short, imperative exam wording.
-- Keep answer-variable names stable in the solution notebook, such as `answer_3_1`.
 - Keep code runnable from top to bottom.
-
-## Validation Rules
-
-The validation script should:
-
-- execute the solution notebook
-- confirm required `answer_*` values or artifacts exist
-- re-compute important numeric answers when practical
-- check model metrics if the notebook writes them
-- check submission schema and row count when applicable
-- confirm both notebooks exist
 
 ## Common Failure Modes
 
@@ -173,7 +172,6 @@ Treat these as hard failures:
 
 - only one notebook is produced
 - the notebook reads like a tutorial instead of an exam paper
-- all questions are direct coding with no B/C/D variety
 - question count is not exactly 14
 - preprocessing steps were not checked against the real dataset
-- validation checks only file existence and not notebook outputs
+
