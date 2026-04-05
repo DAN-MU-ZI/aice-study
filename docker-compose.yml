@@ -1,0 +1,12 @@
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: docker/jupyter/Dockerfile
+    container_name: aice-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/workspace/notebooks
+    working_dir: /workspace
+    restart: unless-stopped
