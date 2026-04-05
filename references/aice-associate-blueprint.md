@@ -52,7 +52,13 @@ Write the following before question 1:
 - domain
 - goal
 - short business scenario tied to the dataset
-- cautions/instructions
+- instructions (지시사항)
+    - 반드시 한국어로 다음 내용을 포함할 것:
+        - 각 문항의 답안은 반드시 '# 여기에 답안코드를 작성하세요' 등이 표시된 셀에 입력해야 합니다.
+        - 제공된 시험문항 셀을 삭제하거나 답안 위치가 아닌 다른 셀에 답안코드를 작성 시 채점되지 않습니다.
+        - 답안 작성 전에 문항에 제시된 지시사항(가이드)을 확인하세요.
+        - 문항에 변수명이 제시된 경우 반드시 해당 변수명을 사용하세요.
+        - 시험 문항과 데이터 등을 무단으로 촬영/캡처, 공유/유포 시 법적 제재를 받을 수 있습니다.
 - column description table based on actual dataset columns
 
 If the user provides a sample exam, mirror its tone and layout first.
@@ -65,11 +71,24 @@ The exam should primarily consist of direct coding, with other types used option
 
 Use for imports, loading data, plotting, splitting data, fitting models.
 
-Typical prompt marker:
-
-```python
-# (N) Write the answer code here and run it.
-```
+Typical prompt layout across cells:
+1. Markdown Cell (Title):
+   ```
+   ### **N. [Task Objective]**
+   ### **아래 가이드에 따라 ... 하세요.**
+   ```
+2. Markdown Cell (The Guide):
+   ```
+   * **
+   - 대상 데이터프레임 : df
+   - [Detailed instruction 1]
+   - [Detailed instruction 2]
+   ---
+   ```
+3. Code Cell:
+   ```python
+   # (N) 여기에 답안코드를 작성하고 실행하세요.
+   ```
 
 ### Type B: bug fixing (Optional/Strategic)
 

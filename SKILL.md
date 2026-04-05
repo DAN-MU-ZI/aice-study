@@ -11,8 +11,8 @@ Create a runnable AICE-style mock exam package from a Kaggle source. Mirror the 
 
 Always create all of the following under a dataset-specific folder in the workspace notebook area:
 
-- `<slug>.ipynb` for the exam paper
-- `<slug>_solution.ipynb` for the worked solution (Reference Solution)
+- `problem.ipynb` for the exam paper
+- `solution.ipynb` for the worked solution (Reference Solution)
 - `data/raw/`
 - `data/submissions/`
 
@@ -41,6 +41,10 @@ Keep the same question order and same structure, then fill in code, answers, and
 
 7. Verify the package.
 Confirm that the solution notebook is runnable and contains the expected model answers and outputs. Ensure the notebooks share the same question order.
+- Ensure each question follows the "AICE Guide Format":
+    1. Title Cell: `### **N. Task summary.**\n### **아래 가이드에 따라 ... 하세요.**`
+    2. Guide Cell: A separate markdown cell starting with `* **`, followed by `- 대상 데이터프레임 : ...` and other bulleted instructions, ending with `---`.
+    3. Code Cell: Starts with `# (N) 여기에 답안코드를 작성하고 실행하세요.`
 
 
 ## Hard Rules
@@ -49,7 +53,8 @@ Confirm that the solution notebook is runnable and contains the expected model a
 - Follow the official point distribution: Data Analysis (30pt), Preprocessing (30pt), and AI Modeling (40pt).
 - Prefer any user-provided sample exam over generic defaults. Match its tone, section headers, point style, and cell conventions unless the user says otherwise.
 - Write notebook text in Korean unless the user asks for another language.
-- Include exam front matter: title, domain, goal, scenario, cautions, and a column description table tied to the actual dataset.
+- Include exam front matter: title, domain, goal, scenario, instructions (지시사항), and a column description table tied to the actual dataset.
+- Ensure the "Instructions" (지시사항) section covers: answer cell usage, variable naming, saving, and intellectual property/exam rules, matching the AICE sample style.
 - Primarily use direct coding (Type A) for questions. Optionally use mixed B/C/D types to add variety when appropriate for the dataset.
 
 - Insert setup cells before visualization sections or TensorFlow sections when needed.

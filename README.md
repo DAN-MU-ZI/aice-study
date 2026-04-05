@@ -159,8 +159,8 @@ notebooks/
     ├── data/
     │   ├── raw/          ← 원본 데이터 (train.csv, test.csv 등)
     │   └── submissions/  ← 제출 파일 저장 위치
-    ├── <이름>.ipynb              ← 문제지 (빈 코드 셀, 오류 코드, 빈칸)
-    └── <이름>_모범답안.ipynb      ← 정답 코드, 해설, 예상 출력
+    ├── problem.ipynb              ← 문제지 (빈 코드 셀, 오류 코드, 빈칸)
+    └── solution.ipynb             ← 정답 코드, 해설, 예상 출력
 
 ```
 
