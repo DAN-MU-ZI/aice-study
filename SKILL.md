@@ -1,6 +1,6 @@
 ---
 name: kaggle-aice-associate-builder
-description: "Build AICE Associate-style Kaggle practice sets from a competition or dataset. Use when Codex must inspect a Kaggle tabular source and generate a realistic exam package in Jupyter format: a problem notebook, a worked-solution notebook, raw/submission folders, and a validation script. Best for regression or classification tasks that need Korean exam wording, mixed A/B/C/D question types, dataset-specific preprocessing, and Docker-friendly execution."
+description: "Build AICE Associate-style Kaggle practice sets from a competition or dataset. Use when Codex must inspect a Kaggle tabular source and generate a realistic exam package in Jupyter format: a problem notebook, a worked-solution notebook, raw/submission folders, and a validation script. Best for regression or classification tasks that need Korean exam wording, mixed A/B/C question types (Coding, Blank-filling, Interpretation), fixed 14-question flow (30/30/40 pts) matching official syllabus, and Docker-friendly execution."
 ---
 
 # Kaggle AICE Associate Builder
@@ -31,7 +31,7 @@ Identify the main train/test files, target column, task type, ID columns, missin
 Treat that file as the structure contract for the paper.
 
 4. Design the exam package before writing cells.
-Choose a valid 14-question mix and map each question to actual dataset columns and realistic preprocessing/modeling steps.
+   Strictly follow the 14-question standard sequence defined in the blueprint (30pt Analysis, 30pt Preprocessing, 40pt Modeling). Map each question to actual dataset columns and realistic preprocessing/modeling steps.
 
 5. Write the problem notebook first.
 Make it look like a real exam sheet: scenario text, cautions, column table, scored sections, and answer cells with blanks or incorrect starter code where appropriate.
@@ -41,21 +41,24 @@ Keep the same question order and same structure, then fill in code, answers, and
 
 7. Verify the package.
 Confirm that the solution notebook is runnable and contains the expected model answers and outputs. Ensure the notebooks share the same question order.
-- Ensure each question follows the "AICE Guide Format":
-    1. Title Cell: `### **N. Task summary.**\n### **아래 가이드에 따라 ... 하세요.**`
-    2. Guide Cell: A separate markdown cell starting with `* **`, followed by `- 대상 데이터프레임 : ...` and other bulleted instructions, ending with `---`.
-    3. Code Cell: Starts with `# (N) 여기에 답안코드를 작성하고 실행하세요.`
+- Ensure each question follows the "AICE Standard Snippet Format" (3-Cell or derivative):
+    1. **Title Cell (Markdown)**: `### **N. Task summary.**\n### **아래 가이드에 따라 ... 하세요.**`
+    2. **Guide Cell (Markdown)**: Starts with `* **`, followed by `- 대상 데이터프레임 : ...` and specific constraints, ending with a horizontal line `---`. 
+       - Use `<font color=blue>` for critical instructions like filling in blanks.
+    3. **Answer Cell (Code)**: Standard coding prompt `# (N) 여기에 답안코드를 작성하고 실행하세요.`
+       - For blank-filling, use `# (코드 셀) 코드의 빈칸을 채우고 실행하세요` followed by `# (N-1) 여기에 답안을 입력하세요(실행 불필요)` cells.
 
 
 ## Hard Rules
 
 - Keep exactly 14 scored questions. Count subparts carefully.
-- Follow the official point distribution: Data Analysis (30pt), Preprocessing (30pt), and AI Modeling (40pt).
-- Prefer any user-provided sample exam over generic defaults. Match its tone, section headers, point style, and cell conventions unless the user says otherwise.
-- Write notebook text in Korean unless the user asks for another language.
-- Include exam front matter: title, domain, goal, scenario, instructions (지시사항), and a column description table tied to the actual dataset.
-- Ensure the "Instructions" (지시사항) section covers: answer cell usage, variable naming, saving, and intellectual property/exam rules, matching the AICE sample style.
-- Primarily use direct coding (Type A) for questions. Optionally use mixed B/C/D types to add variety when appropriate for the dataset.
+- Include exam front matter:
+    1. **Header**: Exam Title (`AICE Associate <font color=red>연습문제</font>`), Domain, Goal, Scenario.
+    2. **Rules**: Standard exam regulations.
+    3. **Column Table**: Detailed data dictionary using MD table format, separated by `---`.
+- Follow the official point distribution strictly: Data Analysis (30pt), Preprocessing (30pt), and AI Modeling (40pt).
+- Use visual branding: Blue bold headers for sections (e.g., `## <font color=blue>**<데이터 분석 (30점)>**</font>`).
+- Primarily use direct coding (Type A). Use blank-filling (Type B) for modeling or complex evaluation tasks to mirror sample quality.
 
 - Insert setup cells before visualization sections or TensorFlow sections when needed.
 - Use concrete file names, paths, and column names. Do not leave placeholders once the dataset is known.

@@ -134,20 +134,22 @@ The AI must balance the 14 questions within these official ranges based on the d
 ### Example 14-Question Layout (5-4-5 Split)
 Below is one standard anchor layout. The AI may shift 1 question between sections (e.g., to a 6-4-4 or 5-5-4 split) if the dataset requires more analysis or preprocessing steps.
 
-1. **[Analysis]** Library imports and data loading (A)
-2. **[Analysis]** Data shape and basic schema check (A/D)
-3. **[Analysis]** Target value distribution or summary stats (A/D)
-4. **[Analysis]** Feature correlation or group-by analysis (A/D)
-5. **[Analysis]** EDA Visualization (Chart reading) (D/A)
-6. **[Preprocessing]** Handling missing values or outliers (A/B)
-7. **[Preprocessing]** Categorical encoding (A/C)
-8. **[Preprocessing]** Feature scaling (B/C)
-9. **[Preprocessing]** Train/Test split (A)
-10. **[Modeling]** ML regressor/classifier training (A)
-11. **[Modeling]** ML performance evaluation (D/A)
-12. **[Modeling]** Deep Learning model construction (C/A)
-13. **[Modeling]** training history visualization/interpretation (D)
-14. **[Modeling]** Final test prediction or Feature Importance (A/D)
+1. **[Analysis] Library Import**: Import requirements with specific aliases (e.g., `pd`, `np`). (Type A)
+2. **[Analysis] Data Loading**: Load CSV, assign to variable (e.g., `df`), and output `head(n)`. (Type A)
+3. **[Analysis] Basic Data Check**: `info()`, `shape`, or `describe()` to understand data composition. (Type A)
+   > *Insert Visualization Setup Cell (Font settings) here.*
+4. **[Analysis] Distribution Analysis**: Visualization (e.g., `countplot`) + **Interpretation** (Type A + Type C).
+5. **[Analysis] Relationship Analysis**: Visualization (e.g., `jointplot`, `boxplot`). (Type A)
+6. **[Preprocessing] Outlier & Selection**: Filter outliers (e.g., `df[df.col < N]`) and drop ID/RID columns. (Type A)
+7. **[Preprocessing] Missing Values**: Check `isnull()` and `dropna()`. Often includes an **Error Correction** task or **Result Count** check. (Type A/B + Type C)
+8. **[Preprocessing] Encoding & Scaling**: `get_dummies()` and `StandardScaler`/`RobustScaler`. Usually a **Blank Filling** task. (Type B/A)
+9. **[Preprocessing] Data Split**: `train_test_split()` with specific ratio and `random_state`. (Type A)
+10. **[Modeling] ML Training**: Train **Decision Tree** and **Random Forest** models with specific hyperparameters (`max_depth`, `random_state`). (Type A)
+11. **[Modeling] Feature Importance**: Visualization of `feature_importances_` + **Variable Identification** (Type A + Type C).
+12. **[Modeling] ML Evaluation**: Calculate metrics (MAE for Reg, Accuracy for Clf) and **Model Comparison**. (Type A + Type C)
+    > *Insert TensorFlow Setup Cell here.*
+13. **[Modeling] DL Construction**: `Sequential` model with specific layers (Dense, Dropout, BN) and `EarlyStopping`. Usually a **Blank Filling** task. (Type B/A)
+14. **[Modeling] DL Evaluation**: Learning curve visualization (`mse` or `accuracy` history). (Type A)
 
 ## Dataset Adaptation Guardrails
 
