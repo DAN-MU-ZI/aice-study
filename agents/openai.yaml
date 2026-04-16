@@ -1,9 +1,9 @@
 interface:
   display_name: "Kaggle AICE Associate Builder"
-  short_description: "Build realistic AICE exam packages from Kaggle data"
+  short_description: "Generate official AICE 14-question exam notebooks from Kaggle tabular data"
   icon_small: "./assets/kaggle-aice.svg"
   icon_large: "./assets/kaggle-aice.svg"
-  default_prompt: "Use $kaggle-aice-associate-builder to inspect a Kaggle competition or dataset and generate a realistic 14-question AICE Associate exam package with a problem notebook, a solution notebook, validation, and Docker-friendly execution."
+  default_prompt: "Use $kaggle-aice-associate-builder to turn a Kaggle tabular source into paired AICE Associate 문제지/해설지 notebooks in sample exam tone."
 
 dependencies:
   tools:

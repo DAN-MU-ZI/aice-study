@@ -1,86 +1,52 @@
 ---
 name: kaggle-aice-associate-builder
-description: "Build AICE Associate-style Kaggle practice sets from a competition or dataset. Use when Codex must inspect a Kaggle tabular source and generate a realistic exam package in Jupyter format: a problem notebook, a worked-solution notebook, raw/submission folders, and a validation script. Best for regression or classification tasks that need Korean exam wording, mixed A/B/C question types (Coding, Blank-filling, Interpretation), fixed 14-question flow (30/30/40 pts) matching official syllabus, and Docker-friendly execution."
+description: "Build official AICE Associate problem/solution notebooks from a Kaggle tabular source, using Korean sample-exam tone and the 14-question 30/30/40 structure."
 ---
 
 # Kaggle AICE Associate Builder
 
-Create a runnable AICE-style mock exam package from a Kaggle source. Mirror the look and flow of a real AICE exam paper, not a generic tutorial notebook.
+Turn a Kaggle tabular source into an AICE Associate-style exam package that reads like the provided sample exam, not a tutorial notebook.
 
-## Required Outputs
+## Outputs
 
-Always create all of the following under a dataset-specific folder in the workspace notebook area:
-
-- `problem.ipynb` for the exam paper
-- `solution.ipynb` for the worked solution (Reference Solution)
+- Create all of the following under a dataset-specific notebook folder:
+- `problem.ipynb`
+- `solution.ipynb`
 - `data/raw/`
 - `data/submissions/`
+- Use these notebook filenames as fixed canonical names. Do not rename them to dataset-specific forms such as `<slug>.ipynb` or `<slug>_solution.ipynb`.
+- If Docker is available, prefer it and keep the exact run command for the final response.
 
+## Official Structure
 
-If Docker is available, prefer Docker execution and keep the exact command you used ready for the final response.
+- Produce exactly `14문항`.
+- Follow the current official ranges: `데이터 분석 5~6문항 / 30점`, `데이터 전처리 4~5문항 / 30점`, `AI 모델링 4~5문항 / 40점`.
+- Treat sample notebooks as style references only. Do not copy their older `20/30/50` scoring.
+- Use direct coding as the default question type. Add bug-fixing, blank-filling, or interpretation only where they improve sample fidelity.
 
-## Workflow
+## Sample-First Format
 
-1. Resolve the Kaggle source with Kaggle MCP.
-If the user provides a competition or dataset name, fetch metadata first. If access is blocked by authentication or competition acceptance, surface that immediately.
+- Match the sample tone at the top of both notebooks: `샘플문항`, `[유의사항]`, domain, goal, short business scenario, and a dataset-specific column description table before question 1.
+- Keep the writing in Korean, short, imperative, and exam-like.
+- Save notebooks and any Korean text artifacts in UTF-8.
+- Problem and solution notebooks must share the same question order and nearly the same cell rhythm.
+- The problem notebook must not contain final answers, partially solved answer code, hidden worked code, ready-to-run imports that directly answer a question, final metric values, or direct textual answer hints.
+- The solution notebook should read like a reference answer sheet, with completed code and short answer-style notes only.
+- Use explicit section headers with point labels and sample-like answer cells.
 
-2. Inspect the dataset before drafting anything.
-Identify the main train/test files, target column, task type, ID columns, missing-value pattern, categorical columns, row counts, and whether the dataset naturally supports submission generation.
+## Dataset Rules
 
-3. Read `references/aice-associate-blueprint.md` before writing notebooks.
-Treat that file as the structure contract for the paper.
+- Inspect the real data before drafting. Confirm task type, target, row counts, likely ID columns, missingness, categorical vs numeric columns, and submission shape.
+- Use real file names, paths, columns, and variable names after inspection. Do not leave placeholders.
+- Do not force a canned preprocessing recipe. Check that null handling, outlier handling, encoding, scaling, metrics, and models fit the data.
+- Include a small deep-learning section when the environment and dataset make it reasonable; otherwise replace it with another modeling question and explain that choice in the solution notebook.
 
-4. Design the exam package before writing cells.
-   Strictly follow the 14-question standard sequence defined in the blueprint (30pt Analysis, 30pt Preprocessing, 40pt Modeling). Map each question to actual dataset columns and realistic preprocessing/modeling steps.
+## Verification
 
-5. Write the problem notebook first.
-Make it look like a real exam sheet: scenario text, cautions, column table, scored sections, and answer cells with blanks or incorrect starter code where appropriate.
-
-6. Derive the solution notebook from the problem notebook.
-Keep the same question order and same structure, then fill in code, answers, and short explanations.
-
-7. Verify the package.
-Confirm that the solution notebook is runnable and contains the expected model answers and outputs. Ensure the notebooks share the same question order.
-- Ensure each question follows the "AICE Standard Snippet Format" (3-Cell or derivative):
-    1. **Title Cell (Markdown)**: `### **N. Task summary.**\n### **아래 가이드에 따라 ... 하세요.**`
-    2. **Guide Cell (Markdown)**: Starts with `* **`, followed by `- 대상 데이터프레임 : ...` and specific constraints, ending with a horizontal line `---`. 
-       - Use `<font color=blue>` for critical instructions like filling in blanks.
-    3. **Answer Cell (Code)**: Standard coding prompt `# (N) 여기에 답안코드를 작성하고 실행하세요.`
-       - For blank-filling, use `# (코드 셀) 코드의 빈칸을 채우고 실행하세요` followed by `# (N-1) 여기에 답안을 입력하세요(실행 불필요)` cells.
-
-
-## Hard Rules
-
-- Keep exactly 14 scored questions. Count subparts carefully.
-- Include exam front matter:
-    1. **Header**: Exam Title (`AICE Associate <font color=red>연습문제</font>`), Domain, Goal, Scenario.
-    2. **Rules**: Standard exam regulations.
-    3. **Column Table**: Detailed data dictionary using MD table format, separated by `---`.
-- Follow the official point distribution strictly: Data Analysis (30pt), Preprocessing (30pt), and AI Modeling (40pt).
-- Use visual branding: Blue bold headers for sections (e.g., `## <font color=blue>**<데이터 분석 (30점)>**</font>`).
-- Primarily use direct coding (Type A). Use blank-filling (Type B) for modeling or complex evaluation tasks to mirror sample quality.
-
-- Insert setup cells before visualization sections or TensorFlow sections when needed.
-- Use concrete file names, paths, and column names. Do not leave placeholders once the dataset is known.
-- Check each preprocessing step against the real data before committing to it. Never emit instructions that would obviously collapse the dataset, such as a blind `dropna()` if it would remove nearly all rows.
-- Align metrics with the task. Use the competition metric when available and stable. Add a secondary teaching metric only when it improves clarity.
-- Keep the solution notebook executable from top to bottom with the repo's available packages whenever feasible.
-
-- Do not use JSON artifacts as a substitute for the worked solution notebook. The solution notebook itself must contain the completed code and visible outputs.
-- Do not stop at a scaffold if local data is already available or can be downloaded in the current environment.
-
-## Deep Learning Rule
-
-Many AICE samples include at least one neural-network question. Include a small deep-learning section when the environment and dataset make it reasonable.
-
-Only omit deep learning when it is genuinely unrealistic or harmful for the task. If you omit it, replace it with another modeling or interpretation question and state the reason in the solution notebook.
-
-## Verification Expectations
-
-- Ensure the solution notebook reflects correct answers for the dataset.
-- Verify both notebooks exist and share the same question order.
-
-
-## Reference
-
-Read `references/aice-associate-blueprint.md` before drafting. Use it as the exam-writing contract, especially for notebook pair structure, question-type balance, and failure-mode avoidance.
+- Verify that all required artifacts exist, the section split stays within the official ranges, and both notebooks are runnable top to bottom with matching question order.
+- Verify that the problem notebook does not leak answers. Check for filled answer cells, completed bug-fix cells, precomputed `answer_*` variables, solved blank placeholders, or markdown text that reveals the expected answer directly.
+- Prefer output-first verification: execute `solution.ipynb`, then inspect the executed notebook outputs and generated artifacts directly.
+- Treat charts, printed metrics, saved submission files, and notebook-visible tables as the primary evidence of correctness.
+- If a `.py` validator is used, keep it as a thin runner/checker around the executed notebook and generated files. Do not re-implement the full answer logic in the validator unless the user explicitly asks for a recomputation-based checker.
+- Before finishing the task, perform one final review pass over the generated package. Re-check file naming, question counts, section score ranges, answer leakage in `problem.ipynb`, and whether the executed outputs in `solution.ipynb` still match the intended exam flow.
+- Read `references/aice-associate-blueprint.md` once before drafting and use it for detailed cell patterns and question-type examples.

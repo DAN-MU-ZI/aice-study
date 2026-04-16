@@ -1,16 +1,26 @@
 # AICE Associate Blueprint
 
-Use this file as the contract for drafting or reviewing an AICE-style notebook package.
+Use this file as the detailed contract for drafting or reviewing an AICE-style notebook package.
+
+## Source of Truth
+
+- Use the current official structure as the scoring authority:
+- `데이터 분석 5~6문항 / 30점`
+- `데이터 전처리 4~5문항 / 30점`
+- `AI 모델링 4~5문항 / 40점`
+- Total: `14문항 / 100점 / 90분`
+- Some legacy sample notebooks use `20/30/50`. Treat them as tone and layout references only, never as the scoring source of truth.
 
 ## Core Package Shape
 
 Always create:
 
-- one problem notebook
-- one solution notebook (Reference Solution)
+- `problem.ipynb`
+- `solution.ipynb`
 - `data/raw/`
 - `data/submissions/`
 
+Use `problem.ipynb` and `solution.ipynb` as fixed canonical filenames. Do not replace them with dataset-specific notebook names.
 
 ## Notebook Pair Contract
 
@@ -20,16 +30,16 @@ Make the problem notebook look like a real exam paper.
 
 Include:
 
-- title
+- sample-style title banner
 - domain
-- objective
-- scenario paragraph
-- cautions/instructions
+- goal
+- short business scenario
+- `[유의사항]`
 - column description table
 - section headers with point labels
-- answer cells, blank cells, or intentionally wrong code cells
+- answer cells, blank cells, or intentionally wrong starter code when needed
 
-Do not include final answers, final `answer_*` variables, or hidden worked code in the problem notebook.
+Do not include final answers, final `answer_*` variables, hidden worked code, partially completed answer code, already-correct starter code for a scored item, precomputed metric values, or direct textual hints that reveal the answer.
 
 ### Solution Notebook
 
@@ -39,10 +49,9 @@ Add:
 
 - completed code
 - visible outputs for charts, metrics, and final submission generation
-- short explanations of the logic (Reference Answer style)
+- short reference-answer notes only
 
-
-Do not turn the solution notebook into a long-form tutorial. Keep the style exam-like.
+Do not turn the solution notebook into a long-form tutorial.
 
 ## Required Front Matter
 
@@ -52,104 +61,89 @@ Write the following before question 1:
 - domain
 - goal
 - short business scenario tied to the dataset
-- instructions (지시사항)
-    - 반드시 한국어로 다음 내용을 포함할 것:
-        - 각 문항의 답안은 반드시 '# 여기에 답안코드를 작성하세요' 등이 표시된 셀에 입력해야 합니다.
-        - 제공된 시험문항 셀을 삭제하거나 답안 위치가 아닌 다른 셀에 답안코드를 작성 시 채점되지 않습니다.
-        - 답안 작성 전에 문항에 제시된 지시사항(가이드)을 확인하세요.
-        - 문항에 변수명이 제시된 경우 반드시 해당 변수명을 사용하세요.
-        - 시험 문항과 데이터 등을 무단으로 촬영/캡처, 공유/유포 시 법적 제재를 받을 수 있습니다.
+- `[유의사항]` in Korean
+  - 각 문항의 답안은 반드시 지정된 답안 셀에 입력해야 합니다.
+  - 제공된 시험문항 셀을 삭제하거나 답안 위치가 아닌 다른 셀에 작성하면 채점되지 않습니다.
+  - 답안 작성 전에 문항에 제시된 가이드를 확인해야 합니다.
+  - 문항에 변수명이 제시된 경우 반드시 해당 변수명을 사용해야 합니다.
+  - 시험 문항과 데이터 등을 무단으로 촬영, 공유, 유포할 경우 제재를 받을 수 있습니다.
 - column description table based on actual dataset columns
 
-If the user provides a sample exam, mirror its tone and layout first.
+If the user provides a sample exam, mirror its tone and layout first. If the sample conflicts with the official scoring ranges, keep the official ranges.
 
-## Question Variety (Types)
+## Question Types
 
-The exam should primarily consist of direct coding, with other types used optionally to mirror the AICE sample style where appropriate.
+Use direct coding as the default form. Add the other types only when they improve sample fidelity or fit the dataset naturally.
 
-### Type A: direct coding (Primary)
+### Type A: direct coding
 
-Use for imports, loading data, plotting, splitting data, fitting models.
+Typical pattern:
 
-Typical prompt layout across cells:
-1. Markdown Cell (Title):
-   ```
-   ### **N. [Task Objective]**
-   ### **아래 가이드에 따라 ... 하세요.**
-   ```
-2. Markdown Cell (The Guide):
-   ```
-   * **
-   - 대상 데이터프레임 : df
-   - [Detailed instruction 1]
-   - [Detailed instruction 2]
-   ---
-   ```
-3. Code Cell:
-   ```python
-   # (N) 여기에 답안코드를 작성하고 실행하세요.
-   ```
+1. Markdown title cell
+2. Markdown guide cell
+3. Code answer cell
 
-### Type B: bug fixing (Optional/Strategic)
+### Type B: bug fixing
 
-If specific dataset steps are prone to common errors, provide starter code with intentional mistakes for the student to correct. Treat this as a secondary type to add flavor, not a hard requirement for every paper.
+Use when a preprocessing or modeling step benefits from correcting realistic starter code.
 
-### Type C: fill in the blanks (Optional)
+### Type C: fill in the blanks
 
-Use placeholders like `<#7-1>` inside a code cell plus separate answer cells.
+Use sparingly for modeling or evaluation steps that benefit from sample-like answer placeholders.
 
 ### Type D: result interpretation
 
-Ask the student to read a chart, metric, or table and type the result in a text-answer cell.
+Use when the student must read a real chart, metric, or table and type the result.
 
-Do not make all text-answer questions trivial. Tie them to actual plots or model outputs.
+## Official Section Plan
 
-## Section Plan (Total 100 points, 14 questions, 90 mins)
+### 1. 데이터 분석 [5~6문항 / 30점]
 
-Follow this official distribution and point structure:
+- 필요 라이브러리 설치
+- 데이터 구성 및 특성 파악
+- 데이터 품질 점검
 
-### 1. 데이터 분석 (Data Analysis) [5~6문항 / 30점]
-- 필요 라이브러리 설치 (`import`)
-- 데이터 구성 및 특성 파악 (`shape`, `info`, `describe`, `head`)
-- 데이터 품질 점검 및 시각화 (기본 EDA, 상관관계 등)
+### 2. 데이터 전처리 [4~5문항 / 30점]
 
-### 2. 데이터 전처리 (Data Preprocessing) [4~5문항 / 30점]
-- 데이터 결측치/이상치 처리 (`isnull`, `dropna`, `fillna`, `outliers`)
-- 데이터 스케일링 및 변환 (`StandardScaler`, `MinMaxScaler`)
-- 라벨 인코딩 / 원핫 인코딩 (`LabelEncoder`, `get_dummies`)
-- 데이터셋 분할 (`train_test_split`)
+- 데이터 결측치/이상치 등 처리
+- 데이터 스케일링
+- 라벨 인코딩/원핫 인코딩
+- Train/Test 데이터셋 분할
 
-### 3. AI 모델링 (AI Modeling) [4~5문항 / 40점]
-- 머신러닝 모델 학습 (Linear, Tree, Ensemble 등)
-- 딥러닝 모델 학습 (Artificial Neural Networks)
-- 모델 성능 평가 및 시뮬레이션 (MSE, MAE, R2, Accuracy, F1 등)
-- 모델 성능 개선 및 그래픽 출력 (Feature Importance, History plots)
+### 3. AI 모델링 [4~5문항 / 40점]
 
-### 4. 문항 분배 전략 (Question Distribution Strategy)
-The AI must balance the 14 questions within these official ranges based on the dataset's complexity:
-- **Data Analysis**: 5 or 6 questions
-- **Data Preprocessing**: 4 or 5 questions
-- **AI Modeling**: 4 or 5 questions
+- 머신러닝 모델 학습
+- 딥러닝 모델 학습
+- 모델 성능 평가 및 시뮬레이션
+- 모델 성능 개선 및 그래픽 출력
 
-### Example 14-Question Layout (5-4-5 Split)
-Below is one standard anchor layout. The AI may shift 1 question between sections (e.g., to a 6-4-4 or 5-5-4 split) if the dataset requires more analysis or preprocessing steps.
+## Distribution Strategy
 
-1. **[Analysis] Library Import**: Import requirements with specific aliases (e.g., `pd`, `np`). (Type A)
-2. **[Analysis] Data Loading**: Load CSV, assign to variable (e.g., `df`), and output `head(n)`. (Type A)
-3. **[Analysis] Basic Data Check**: `info()`, `shape`, or `describe()` to understand data composition. (Type A)
-   > *Insert Visualization Setup Cell (Font settings) here.*
-4. **[Analysis] Distribution Analysis**: Visualization (e.g., `countplot`) + **Interpretation** (Type A + Type C).
-5. **[Analysis] Relationship Analysis**: Visualization (e.g., `jointplot`, `boxplot`). (Type A)
-6. **[Preprocessing] Outlier & Selection**: Filter outliers (e.g., `df[df.col < N]`) and drop ID/RID columns. (Type A)
-7. **[Preprocessing] Missing Values**: Check `isnull()` and `dropna()`. Often includes an **Error Correction** task or **Result Count** check. (Type A/B + Type C)
-8. **[Preprocessing] Encoding & Scaling**: `get_dummies()` and `StandardScaler`/`RobustScaler`. Usually a **Blank Filling** task. (Type B/A)
-9. **[Preprocessing] Data Split**: `train_test_split()` with specific ratio and `random_state`. (Type A)
-10. **[Modeling] ML Training**: Train **Decision Tree** and **Random Forest** models with specific hyperparameters (`max_depth`, `random_state`). (Type A)
-11. **[Modeling] Feature Importance**: Visualization of `feature_importances_` + **Variable Identification** (Type A + Type C).
-12. **[Modeling] ML Evaluation**: Calculate metrics (MAE for Reg, Accuracy for Clf) and **Model Comparison**. (Type A + Type C)
-    > *Insert TensorFlow Setup Cell here.*
-13. **[Modeling] DL Construction**: `Sequential` model with specific layers (Dense, Dropout, BN) and `EarlyStopping`. Usually a **Blank Filling** task. (Type B/A)
-14. **[Modeling] DL Evaluation**: Learning curve visualization (`mse` or `accuracy` history). (Type A)
+- `5-4-5` is only an anchor example, not a fixed rule.
+- Shift by one question within the official ranges when the dataset needs more analysis or preprocessing, for example `6-4-4` or `5-5-4`.
+- Keep the total at `14문항` and the section points at `30/30/40`.
+- Make the modeling section large enough to cover ML, evaluation, and one deep-learning or replacement task.
+
+## Example 14-Question Flow
+
+One common anchor flow is:
+
+1. Library import
+2. Data loading
+3. Basic data check
+4. Visualization setup
+5. Distribution or relationship analysis
+6. Outlier or ID-column handling
+7. Missing-value handling
+8. Encoding or scaling
+9. Train/test split
+10. First ML model
+11. Second ML model or feature importance
+12. Metric evaluation and comparison
+13. Deep-learning construction or justified replacement task
+14. Learning-curve or improvement plot
+
+Use this as a sample-like rhythm, not a mandatory one-to-one script.
 
 ## Dataset Adaptation Guardrails
 
@@ -158,41 +152,45 @@ Inspect the real data first. Confirm:
 - train/test row counts
 - target column
 - likely ID columns
-- missing-value ratios by column
+- missing-value ratios
 - categorical vs numeric columns
-- whether the competition expects a submission file
+- whether the task expects a submission file
 
-Never copy a generic preprocessing recipe without checking its effect.
+Do not copy a generic preprocessing recipe without checking its effect.
 
-Examples of what to avoid:
+Avoid:
 
 - `dropna()` when it would remove nearly all rows
 - plotting columns that do not exist
-- applying label encoding to high-cardinality free-text fields without justification
-- using a metric that conflicts with the competition goal when a better aligned metric is available
+- unjustified encoding of high-cardinality free text
+- metrics that conflict with the task goal
 
-If the Kaggle competition has an official evaluation metric, use it in at least one modeling question when feasible.
+If the competition exposes an official metric, use it in at least one modeling question when feasible.
 
 ## Deep Learning Guidance
 
-If the environment contains TensorFlow and the dataset size is reasonable, include at least one neural-network question plus one history-plot question. This matches many AICE samples.
+If TensorFlow is available and the dataset size is reasonable, include at least one neural-network question plus one related evaluation or history-plot question.
 
-If deep learning is unrealistic for the dataset or environment, replace it with another modeling or interpretation question and explain why in the solution notebook.
+If deep learning is unrealistic, replace it with another modeling or interpretation task and explain why in the solution notebook.
 
 ## Writing Rules
 
 - Write notebook text in Korean by default.
-- Use concrete paths, not placeholders, once the dataset is known.
-- Keep point labels and section labels explicit.
+- Save notebooks, markdown files, CSV summaries, and other Korean text artifacts in UTF-8.
+- Use concrete paths, file names, columns, and variables once the dataset is known.
+- Keep section labels and point labels explicit.
 - Use short, imperative exam wording.
 - Keep code runnable from top to bottom.
 
-## Common Failure Modes
+## Verification Preference
 
-Treat these as hard failures:
-
-- only one notebook is produced
-- the notebook reads like a tutorial instead of an exam paper
-- question count is not exactly 14
-- preprocessing steps were not checked against the real dataset
-
+- Prefer verifying the executed `solution.ipynb` itself over re-solving the task in a separate script.
+- The default verification flow is:
+- execute `solution.ipynb`
+- inspect notebook-visible outputs such as charts, printed metrics, tables, and saved-file messages
+- inspect generated artifacts such as submission files or summary CSVs
+- confirm the problem and solution notebooks still share the same question order
+- inspect `problem.ipynb` to ensure scored answer cells are still blank, intentionally incomplete, or intentionally incorrect as designed
+- perform one final review pass before closing the task, checking naming, section counts, score distribution, answer leakage, and notebook flow one more time
+- A `.py` validator may be used as a thin automation wrapper for notebook execution and artifact checks.
+- Avoid writing validators that fully recompute the notebook answers from scratch unless the user explicitly asks for a second independent checker.
