@@ -6,7 +6,28 @@ services:
     container_name: aice-jupyter
     ports:
       - "8888:8888"
+    environment:
+      JUPYTER_PORT: 8888
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-aice-jupyter-token}
     volumes:
       - ./notebooks:/workspace/notebooks
     working_dir: /workspace
+    restart: unless-stopped
+
+  jupyter-mcp:
+    image: datalayer/jupyter-mcp-server:latest
+    container_name: aice-jupyter-mcp
+    depends_on:
+      - jupyter
+    ports:
+      - "4040:4040"
+    environment:
+      JUPYTER_URL: http://jupyter:8888
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-aice-jupyter-token}
+      MCP_TOKEN: ${MCP_TOKEN:-aice-mcp-token}
+      PORT: 4040
+      TRANSPORT: streamable-http
+      JUPYTERLAB: "true"
+      ALLOW_IMG_OUTPUT: "true"
+    command: ["--transport", "streamable-http"]
     restart: unless-stopped
