@@ -57,6 +57,24 @@ AI 에이전트가 Kaggle에서 직접 데이터를 검색하고 다운로드하
 > [!NOTE]
 > Kaggle MCP가 없어도 Docker 환경 자체는 정상 작동합니다. 다만, 에이전트를 통한 자동 데이터셋 조회·다운로드 기능이 제한됩니다.
 
+### Jupyter MCP 설정 (선택)
+
+실행 중인 Docker JupyterLab에 AI 에이전트를 직접 연결해 노트북을 읽고, 셀을 수정하고, 실행 결과를 검증하려면 **Jupyter MCP** 연결을 추가할 수 있습니다.
+
+1. 필요하면 `.env.example`을 복사해 `.env`를 만들고 `JUPYTER_TOKEN`, `MCP_TOKEN` 값을 원하는 값으로 바꿉니다.
+2. `docker compose up --build jupyter jupyter-mcp`로 JupyterLab과 Jupyter MCP를 함께 실행합니다.
+3. MCP 클라이언트에는 **streamable-http** 방식으로 아래 값을 등록합니다.
+
+```text
+Name: jupyter
+URL: http://localhost:4040/mcp
+Header:
+Authorization: Bearer aice-mcp-token
+```
+
+> [!NOTE]
+> 이 저장소는 `jupyter`와 `jupyter-mcp`를 함께 실행하고, MCP 클라이언트는 `http://localhost:4040/mcp`에 HTTP로 연결하는 구성을 기준으로 합니다. `.env`에서 `JUPYTER_TOKEN` 또는 `MCP_TOKEN`을 바꿨다면 클라이언트 설정도 같은 값으로 맞춰야 합니다.
+
 ---
 
 ## 🚀 빠른 시작 (5분)
@@ -79,7 +97,7 @@ mkdir notebooks
 ### 3단계: Docker 환경 실행
 
 ```bash
-docker compose up --build
+docker compose up --build jupyter jupyter-mcp
 ```
 
 첫 실행 시 Python 패키지 설치로 **3~5분** 정도 걸립니다. 아래 메시지가 보이면 준비 완료입니다.
@@ -94,11 +112,11 @@ http://0.0.0.0:8888/lab
 브라우저에서 아래 주소를 열면 바로 사용할 수 있습니다.
 
 ```
-http://localhost:8888
+http://localhost:8888/lab?token=aice-jupyter-token
 ```
 
 > [!IMPORTANT]
-> 비밀번호나 토큰 없이 바로 접속됩니다. 로컬 개발 전용이므로 외부 네트워크에 노출하지 마세요.
+> 기본 설정은 토큰 인증을 사용합니다. `.env`에서 `JUPYTER_TOKEN`을 바꿨다면 접속 URL의 토큰 값도 함께 바꾸세요.
 
 ### ✅ 잘 되었는지 확인하기
 
@@ -296,7 +314,7 @@ docker compose up
 `requirements.txt`나 `Dockerfile`을 수정한 후에는 이미지를 다시 빌드해야 합니다.
 
 ```bash
-docker compose up --build
+docker compose up --build jupyter jupyter-mcp
 ```
 
 ---
@@ -306,6 +324,8 @@ docker compose up --build
 - [AICE Associate 시험 안내](https://aice.study/) — 시험 구성 및 응시 방법
 - [AICE Associate 소개](https://aice.study/info/aice/asso) — 시험 과목·출제 범위·합격 기준 상세
 - [Kaggle MCP 설정 가이드](https://www.kaggle.com/docs/mcp) — AI 에이전트용 Kaggle 연결 설정
+- [Jupyter MCP Server](https://github.com/datalayer/jupyter-mcp-server) — Jupyter용 MCP 서버 프로젝트
+- [Jupyter MCP 설정 가이드](https://jupyter-mcp-server.datalayer.tech/providers/jupyter-streamable-http-standalone) — Streamable HTTP 연결 예시
 - [Docker Desktop 설치](https://www.docker.com/get-docker) — Docker 환경 구축
 - [JupyterLab 사용법](https://jupyterlab.readthedocs.io/) — Jupyter Lab 기본 가이드
 
