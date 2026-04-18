@@ -26,6 +26,14 @@ Use `problem.ipynb` and `solution.ipynb` as fixed canonical filenames. Do not re
 
 ## Notebook Pair Contract
 
+Draft order is mandatory:
+
+1. write `solution.ipynb` first
+2. verify the solved notebook structure, variable names, metrics, and artifacts
+3. derive `problem.ipynb` from that solved notebook without changing question order
+
+Do not invent the exam scaffold independently and then backfill the solution later.
+
 ### Problem Notebook
 
 Make the problem notebook look like a real exam paper.
@@ -45,6 +53,7 @@ Include:
 - separate written-answer cells for interpretation items when evidence generation and textual explanation should be graded separately
 
 Do not include final answers, final `answer_*` variables, hidden worked code, partially completed answer code, already-correct starter code for a scored item, precomputed metric values, or direct textual hints that reveal the answer.
+Build the problem notebook by subtracting answers from the solved notebook, not by redesigning the flow from scratch.
 
 ### Solution Notebook
 
@@ -57,6 +66,7 @@ Add:
 - short reference-answer notes only
 
 Do not turn the solution notebook into a long-form tutorial.
+Treat the solution notebook as the canonical source of truth for execution order, helper variables, metrics, and generated artifacts.
 
 ## Required Front Matter
 
@@ -224,6 +234,8 @@ When deep learning is included and the question is scaffold-heavy, preserve the 
 - explicit architecture constraints
 - exact optimizer, loss, metric, callback, epoch, and batch-size requirements when the question design depends on them
 - topology diagram or equivalent visual reference when architecture is part of the graded prompt
+- prefer a Mermaid diagram in the notebook markdown so the architecture is visible in both `problem.ipynb` and `solution.ipynb`
+- when starter code asks the student to fill architecture blanks, place the Mermaid diagram immediately before the setup notice or starter cell and keep the diagram consistent with the solution architecture
 - placeholder-based starter code when the student is not expected to write the entire block from scratch
 
 ## Writing Rules

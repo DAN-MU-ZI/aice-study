@@ -27,6 +27,7 @@ Use the references this way:
 - Prefer Docker when available.
 - Treat Docker as the default execution path for generation, notebook runs, and validation when the repo already provides a working container.
 - Do not assume host `python` is available or correctly configured.
+- Treat host-side Windows PowerShell notebook writes as unsafe unless the write path is explicitly BOM-free.
 - Prefer the Jupyter container and Jupyter MCP for notebook-native editing, inspection, execution, and verification.
 - If Jupyter MCP appears unavailable, distinguish between:
   - the MCP server being down, and
@@ -52,18 +53,25 @@ If `localhost:4040/mcp` is healthy but the `jupyter` tools are missing in-sessio
 1. Inspect the real dataset before writing any question.
 2. Confirm task type, target column, file names, row counts, likely ID columns, missingness, class balance, and submission shape.
 3. Design the notebook package strictly from `references/aice-associate-blueprint.md`.
-4. Use `references/notebook-snippets.md` only for exact block shapes, not for changing the blueprint logic.
-5. Generate both notebooks and required artifacts under the dataset folder.
-6. Run execution and validation, preferably through Docker.
-7. Perform the final review checklist in this file before finishing.
+4. Draft `solution.ipynb` first so the full workflow, variable names, metrics, and artifacts are fixed before exam scaffolding is written.
+5. Derive `problem.ipynb` from the completed solution notebook by preserving question order and cell rhythm while removing answer leakage.
+6. Use `references/notebook-snippets.md` only for exact block shapes, not for changing the blueprint logic.
+7. Generate both notebooks and required artifacts under the dataset folder.
+8. Run execution and validation, preferably through Docker.
+9. Perform the final review checklist in this file before finishing.
 
 ## Non-Negotiables
 
 - Follow `references/aice-associate-blueprint.md` for package shape, official structure, notebook skeleton, question types, problem-vs-solution rules, dataset adaptation, and deep-learning design.
+- Treat `solution.ipynb` as the source notebook and derive `problem.ipynb` from it after the solved workflow is stable.
 - Keep the writing in Korean, short, imperative, and exam-like.
+- Write the problem notebook in Korean. Problem statements, section titles, cautions, guides, and prompts must be Korean.
 - Use concrete dataset-specific paths, file names, columns, variables, metrics, and artifacts.
 - Do not bypass the blueprint with a simplified ad hoc layout.
 - Do not leak solved answers, solved placeholders, or final textual answers into `problem.ipynb`.
+- Generated `.ipynb` files must be encoded as UTF-8 without BOM.
+- When using repo generators, prefer direct `docker compose run --rm --no-deps jupyter ...` execution over host execution.
+- Store reusable dataset profiles under `scripts/aice_generator/specs/`, not under a top-level `scripts/profiles/` directory.
 
 ## Anti-Patterns To Avoid
 
@@ -83,6 +91,7 @@ Before finishing, verify all of the following:
 - generated files under `data/submissions/` are created when required
 - deep-learning blocks are internally consistent from prompt to solution when present
 - execution and validation were run through Docker when Docker was available
+- notebook bytes do not start with UTF-8 BOM (`EF BB BF`)
 
 Perform one final format pass before ending:
 

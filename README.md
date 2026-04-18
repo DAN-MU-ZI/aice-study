@@ -330,3 +330,11 @@ docker compose up --build jupyter jupyter-mcp
 - [JupyterLab 사용법](https://jupyterlab.readthedocs.io/) — Jupyter Lab 기본 가이드
 
 ---
+
+## Docker Generation Rule
+
+- Generate notebook packages through Docker, not host `python`.
+- Use `docker compose run --rm --no-deps jupyter python /workspace/scripts/generate_aice_associate.py --profile /workspace/scripts/aice_generator/specs/<profile-json> --output-dir /workspace/notebooks/<dataset-dir>`.
+- Generated `.ipynb` files must be UTF-8 without BOM.
+
+---
