@@ -2,6 +2,8 @@
 
 Use this file as the detailed contract for drafting or reviewing an AICE-style notebook package.
 
+For canonical markdown/code block shapes, also load `references/notebook-snippets.md`. Keep this file focused on notebook-pair behavior, section planning, and dataset-adaptation guidance.
+
 ## Source of Truth
 
 - Use the current official structure as the scoring authority:
@@ -9,7 +11,7 @@ Use this file as the detailed contract for drafting or reviewing an AICE-style n
 - `데이터 전처리 4~5문항 / 30점`
 - `AI 모델링 4~5문항 / 40점`
 - Total: `14문항 / 100점 / 90분`
-- Some legacy sample notebooks use `20/30/50`. Treat them as tone and layout references only, never as the scoring source of truth.
+- Ignore any legacy `20/30/50` material. The official structure above is the only scoring source of truth.
 
 ## Core Package Shape
 
@@ -30,7 +32,7 @@ Make the problem notebook look like a real exam paper.
 
 Include:
 
-- sample-style title banner
+- exam-style title banner
 - domain
 - goal
 - short business scenario
@@ -38,6 +40,9 @@ Include:
 - column description table
 - section headers with point labels
 - answer cells, blank cells, or intentionally wrong starter code when needed
+- guide markdown blocks that state dataframe names, variable names, helper functions, and exact constraints when the question requires them
+- placeholder-based starter code for scaffold-heavy preprocessing or modeling items when partial-code solving is the intended assessment format
+- separate written-answer cells for interpretation items when evidence generation and textual explanation should be graded separately
 
 Do not include final answers, final `answer_*` variables, hidden worked code, partially completed answer code, already-correct starter code for a scored item, precomputed metric values, or direct textual hints that reveal the answer.
 
@@ -69,11 +74,31 @@ Write the following before question 1:
   - 시험 문항과 데이터 등을 무단으로 촬영, 공유, 유포할 경우 제재를 받을 수 있습니다.
 - column description table based on actual dataset columns
 
-If the user provides a sample exam, mirror its tone and layout first. If the sample conflicts with the official scoring ranges, keep the official ranges.
+Do not rely on any external exam reference to decide tone or layout. Derive both from the official structure and the rules in this file.
+
+## Canonical Structure Contract
+
+Treat this blueprint as the contract for block rhythm and scaffolding density.
+
+Match the canonical structure on:
+
+- how often title markdown and guide markdown are separated
+- when a question uses `(N-1)`, `(N-2)` style subparts
+- when a chart or metric question also requires a separate written answer cell
+- when starter code contains blanks instead of an empty answer cell
+- when setup/import cells appear before dependent questions
+- when a model topology diagram or equivalent visual scaffold is part of the prompt
+
+Avoid these drifts away from the canonical structure:
+
+- collapsing a guide markdown cell into a shorter title-only question
+- replacing blank-filled starter code with a generic comment-only code cell
+- removing explicit variable names, helper function names, seeds, split ratios, metric names, or callback names that the problem statement should state
+- compressing a multi-step question into one vague instruction
 
 ## Question Types
 
-Use direct coding as the default form. Add the other types only when they improve sample fidelity or fit the dataset naturally.
+Use direct coding as the default form. Add the other types only when they improve assessment quality or fit the dataset naturally.
 
 ### Type A: direct coding
 
@@ -83,17 +108,36 @@ Typical pattern:
 2. Markdown guide cell
 3. Code answer cell
 
+Prefer explicit guide bullets such as dataframe name, variable name, ratio, seed, or helper function when the task depends on them.
+
 ### Type B: bug fixing
 
 Use when a preprocessing or modeling step benefits from correcting realistic starter code.
 
+Prefer realistic broken starter code plus a narrow fix target over a generic "오류를 정정하시오" instruction alone.
+
 ### Type C: fill in the blanks
 
-Use sparingly for modeling or evaluation steps that benefit from sample-like answer placeholders.
+Use sparingly for modeling or evaluation steps that benefit from answer placeholders.
+
+This is especially useful when students should complete method names, callback arguments, or model-layer fragments inside starter code.
 
 ### Type D: result interpretation
 
 Use when the student must read a real chart, metric, or table and type the result.
+
+When evidence generation and written interpretation are distinct skills, preserve that split across two answer cells or one code cell plus one written-answer cell.
+
+## Cell Rhythm Guardrail
+
+Before finalizing a question block, ask:
+
+1. Should this block use more than one cell for clarity or grading separation?
+2. Should this block provide bullet guidance instead of one sentence?
+3. Should this block use placeholders or starter code instead of a blank comment cell?
+4. Should this block require a separate written answer cell for the interpreted result?
+
+If the answer is yes, keep the richer scaffold.
 
 ## Official Section Plan
 
@@ -119,8 +163,8 @@ Use when the student must read a real chart, metric, or table and type the resul
 
 ## Distribution Strategy
 
-- `5-4-5` is only an anchor example, not a fixed rule.
-- Shift by one question within the official ranges when the dataset needs more analysis or preprocessing, for example `6-4-4` or `5-5-4`.
+- `5-4-5` is only an anchor pattern, not a fixed rule.
+- Shift by one question within the official ranges when the dataset needs more analysis or preprocessing, such as `6-4-4` or `5-5-4`.
 - Keep the total at `14문항` and the section points at `30/30/40`.
 - Make the modeling section large enough to cover ML, evaluation, and one deep-learning or replacement task.
 
@@ -143,7 +187,7 @@ One common anchor flow is:
 13. Deep-learning construction or justified replacement task
 14. Learning-curve or improvement plot
 
-Use this as a sample-like rhythm, not a mandatory one-to-one script.
+Use this as a canonical rhythm anchor, not a mandatory one-to-one script.
 
 ## Dataset Adaptation Guardrails
 
@@ -173,6 +217,15 @@ If TensorFlow is available and the dataset size is reasonable, include at least 
 
 If deep learning is unrealistic, replace it with another modeling or interpretation task and explain why in the solution notebook.
 
+When deep learning is included and the question is scaffold-heavy, preserve the same level of guidance:
+
+- setup notice markdown before the graded question
+- dedicated import/setup code cell
+- explicit architecture constraints
+- exact optimizer, loss, metric, callback, epoch, and batch-size requirements when the question design depends on them
+- topology diagram or equivalent visual reference when architecture is part of the graded prompt
+- placeholder-based starter code when the student is not expected to write the entire block from scratch
+
 ## Writing Rules
 
 - Write notebook text in Korean by default.
@@ -181,6 +234,7 @@ If deep learning is unrealistic, replace it with another modeling or interpretat
 - Keep section labels and point labels explicit.
 - Use short, imperative exam wording.
 - Keep code runnable from top to bottom.
+- Do not optimize away scaffold repetition if that repetition is part of the exam format.
 
 ## Verification Preference
 

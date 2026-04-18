@@ -1,52 +1,94 @@
 ---
 name: kaggle-aice-associate-builder
-description: "Build official AICE Associate problem/solution notebooks from a Kaggle tabular source, using Korean sample-exam tone and the 14-question 30/30/40 structure."
+description: "Build official AICE Associate problem/solution notebooks from a Kaggle tabular source, using Korean exam tone and the 14-question 30/30/40 structure."
 ---
 
 # Kaggle AICE Associate Builder
 
-Turn a Kaggle tabular source into an AICE Associate-style exam package that reads like the provided sample exam, not a tutorial notebook.
+Turn a Kaggle tabular source into an AICE Associate-style exam package that feels like a real exam notebook, not a tutorial and not a generic practice sheet.
 
-## Outputs
+This file is the operating procedure and final checklist. Put notebook design and question-structure decisions under `references/aice-associate-blueprint.md`, and use `references/notebook-snippets.md` for canonical block markdown/code shapes.
 
-- Create all of the following under a dataset-specific notebook folder:
-- `problem.ipynb`
-- `solution.ipynb`
-- `data/raw/`
-- `data/submissions/`
-- Use these notebook filenames as fixed canonical names. Do not rename them to dataset-specific forms such as `<slug>.ipynb` or `<slug>_solution.ipynb`.
-- If Docker is available, prefer it and keep the exact run command for the final response.
+## Required Reference
 
-## Official Structure
+Read:
 
-- Produce exactly `14문항`.
-- Follow the current official ranges: `데이터 분석 5~6문항 / 30점`, `데이터 전처리 4~5문항 / 30점`, `AI 모델링 4~5문항 / 40점`.
-- Treat sample notebooks as style references only. Do not copy their older `20/30/50` scoring.
-- Use direct coding as the default question type. Add bug-fixing, blank-filling, or interpretation only where they improve sample fidelity.
+1. `references/aice-associate-blueprint.md`
+2. `references/notebook-snippets.md`
 
-## Sample-First Format
+Use the references this way:
 
-- Match the sample tone at the top of both notebooks: `샘플문항`, `[유의사항]`, domain, goal, short business scenario, and a dataset-specific column description table before question 1.
+- `SKILL.md`: execution procedure, environment rules, and final review checklist
+- `references/aice-associate-blueprint.md`: package shape, notebook-pair contract, section plan, question design rules, and adaptation guidance
+- `references/notebook-snippets.md`: canonical Block Set markdown/code templates for notebook cells
+
+## Execution Environment
+
+- Prefer Docker when available.
+- Treat Docker as the default execution path for generation, notebook runs, and validation when the repo already provides a working container.
+- Do not assume host `python` is available or correctly configured.
+- Prefer the Jupyter container and Jupyter MCP for notebook-native editing, inspection, execution, and verification.
+- If Jupyter MCP appears unavailable, distinguish between:
+  - the MCP server being down, and
+  - the current Codex session not having loaded the MCP registration.
+- Before giving up on Jupyter MCP, check the repository MCP config and endpoint health first.
+- Fall back to direct `.ipynb` file editing only when Jupyter MCP is unavailable or unhealthy.
+- In the final response, record the exact Docker command used when Docker was involved.
+
+### Jupyter MCP Sanity Check
+
+Before concluding that Jupyter MCP cannot be used, verify these in order:
+
+1. the repo config points to the expected MCP server
+2. the Jupyter MCP container is running
+3. the MCP endpoint path and transport are correct
+4. the MCP auth token matches the repo configuration
+5. the current Codex session actually exposes the `jupyter` MCP namespace
+
+If `localhost:4040/mcp` is healthy but the `jupyter` tools are missing in-session, treat it as a session-registration issue, not as a notebook-server issue.
+
+## Working Procedure
+
+1. Inspect the real dataset before writing any question.
+2. Confirm task type, target column, file names, row counts, likely ID columns, missingness, class balance, and submission shape.
+3. Design the notebook package strictly from `references/aice-associate-blueprint.md`.
+4. Use `references/notebook-snippets.md` only for exact block shapes, not for changing the blueprint logic.
+5. Generate both notebooks and required artifacts under the dataset folder.
+6. Run execution and validation, preferably through Docker.
+7. Perform the final review checklist in this file before finishing.
+
+## Non-Negotiables
+
+- Follow `references/aice-associate-blueprint.md` for package shape, official structure, notebook skeleton, question types, problem-vs-solution rules, dataset adaptation, and deep-learning design.
 - Keep the writing in Korean, short, imperative, and exam-like.
-- Save notebooks and any Korean text artifacts in UTF-8.
-- Problem and solution notebooks must share the same question order and nearly the same cell rhythm.
-- The problem notebook must not contain final answers, partially solved answer code, hidden worked code, ready-to-run imports that directly answer a question, final metric values, or direct textual answer hints.
-- The solution notebook should read like a reference answer sheet, with completed code and short answer-style notes only.
-- Use explicit section headers with point labels and sample-like answer cells.
+- Use concrete dataset-specific paths, file names, columns, variables, metrics, and artifacts.
+- Do not bypass the blueprint with a simplified ad hoc layout.
+- Do not leak solved answers, solved placeholders, or final textual answers into `problem.ipynb`.
 
-## Dataset Rules
+## Anti-Patterns To Avoid
 
-- Inspect the real data before drafting. Confirm task type, target, row counts, likely ID columns, missingness, categorical vs numeric columns, and submission shape.
-- Use real file names, paths, columns, and variable names after inspection. Do not leave placeholders.
-- Do not force a canned preprocessing recipe. Check that null handling, outlier handling, encoding, scaling, metrics, and models fit the data.
-- Include a small deep-learning section when the environment and dataset make it reasonable; otherwise replace it with another modeling question and explain that choice in the solution notebook.
+- Do not collapse scaffold-heavy blocks into one markdown cell plus one code cell.
+- Do not replace dataset-specific wording with generic cookbook instructions.
+- Do not invent variable names, metrics, or file paths disconnected from the real dataset.
+- Do not silently switch modeling formulations inside the same graded block.
 
-## Verification
+## Verification Checklist
 
-- Verify that all required artifacts exist, the section split stays within the official ranges, and both notebooks are runnable top to bottom with matching question order.
-- Verify that the problem notebook does not leak answers. Check for filled answer cells, completed bug-fix cells, precomputed `answer_*` variables, solved blank placeholders, or markdown text that reveals the expected answer directly.
-- Prefer output-first verification: execute `solution.ipynb`, then inspect the executed notebook outputs and generated artifacts directly.
-- Treat charts, printed metrics, saved submission files, and notebook-visible tables as the primary evidence of correctness.
-- If a `.py` validator is used, keep it as a thin runner/checker around the executed notebook and generated files. Do not re-implement the full answer logic in the validator unless the user explicitly asks for a recomputation-based checker.
-- Before finishing the task, perform one final review pass over the generated package. Re-check file naming, question counts, section score ranges, answer leakage in `problem.ipynb`, and whether the executed outputs in `solution.ipynb` still match the intended exam flow.
-- Read `references/aice-associate-blueprint.md` once before drafting and use it for detailed cell patterns and question-type examples.
+Before finishing, verify all of the following:
+
+- the notebooks and folder layout match `references/aice-associate-blueprint.md`
+- the question count, section distribution, and notebook rhythm match the blueprint
+- `problem.ipynb` contains no answer leakage
+- `solution.ipynb` runs top to bottom
+- generated files under `data/submissions/` are created when required
+- deep-learning blocks are internally consistent from prompt to solution when present
+- execution and validation were run through Docker when Docker was available
+
+Perform one final format pass before ending:
+
+- inspect the top matter against the blueprint
+- inspect one data-analysis block
+- inspect one preprocessing block
+- inspect one modeling block
+- inspect the deep-learning block against the blueprint when present
+- if the notebook feels materially too short or too dense, expand it before shipping
