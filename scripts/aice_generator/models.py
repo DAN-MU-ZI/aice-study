@@ -63,6 +63,10 @@ class ExamProfile:
     solution_closing: str
     raw_files: list[str]
     required_answers: list[str]
+    required_sections: list[str] = field(default_factory=list)
+    required_notices: list[str] = field(default_factory=list)
+    min_question_text_length: int = 20
+    forbidden_problem_tokens: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ExamProfile":
@@ -81,4 +85,8 @@ class ExamProfile:
             solution_closing=data["solution_closing"],
             raw_files=raw_files,
             required_answers=list(data.get("required_answers", [])),
+            required_sections=list(data.get("required_sections", [])),
+            required_notices=list(data.get("required_notices", [])),
+            min_question_text_length=int(data.get("min_question_text_length", 20)),
+            forbidden_problem_tokens=list(data.get("forbidden_problem_tokens", [])),
         )

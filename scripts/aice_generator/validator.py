@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 
 from .models import ExamProfile
@@ -29,68 +30,43 @@ def required_answers(profile: ExamProfile) -> list[str]:
 
 
 def build_validator(profile: ExamProfile) -> str:
-    raw_paths = ",\n".join(
-        f"    ROOT / \"data\" / \"raw\" / \"{file_name}\"" for file_name in profile.raw_files
+    sections = profile.required_sections or _derive_required_sections(profile)
+    notices = profile.required_notices or list(profile.cautions)
+    forbidden_tokens = profile.forbidden_problem_tokens or required_answers(profile)
+    config_literal = json.dumps(
+        {
+            "expected_question_count": len(profile.questions),
+            "required_answers": required_answers(profile),
+            "required_sections": sections,
+            "required_notices": notices,
+            "required_closing": profile.problem_closing,
+            "min_question_text_length": profile.min_question_text_length,
+            "forbidden_problem_tokens": forbidden_tokens,
+        },
+        ensure_ascii=True,
+        indent=2,
     )
-    raw_names = ", ".join(profile.raw_files)
-    answer_checks = "\n".join(
-        f"assert '{answer_name}' in source_text, '{answer_name} variable is missing from solution notebook'"
-        for answer_name in required_answers(profile)
-    )
-    return f"""import json
-from pathlib import Path
+    return f"""from pathlib import Path
+import sys
 
-ROOT = Path(__file__).resolve().parents[1]
-problem_path = ROOT / "problem.ipynb"
-solution_path = ROOT / "solution.ipynb"
-raw_files = [
-{raw_paths}
-]
-submission_csv = ROOT / "data" / "submissions" / "{profile.submission_file}"
+PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = PACKAGE_ROOT.parents[1]
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-assert problem_path.exists(), "problem.ipynb not found"
-assert solution_path.exists(), "solution.ipynb not found"
+from aice_generator.validation import ValidationConfig, run_package_validation
 
-utf8_bom = b"\\xef\\xbb\\xbf"
-assert problem_path.read_bytes()[:3] != utf8_bom, "problem.ipynb must be UTF-8 without BOM"
-assert solution_path.read_bytes()[:3] != utf8_bom, "solution.ipynb must be UTF-8 without BOM"
+CONFIG = ValidationConfig(**{config_literal})
 
-problem = json.loads(problem_path.read_text(encoding="utf-8"))
-solution = json.loads(solution_path.read_text(encoding="utf-8"))
-
-assert len(problem["cells"]) > 0, "problem notebook is empty"
-assert len(solution["cells"]) > 0, "solution notebook is empty"
-
-problem_questions = [
-    "".join(cell.get("source", []))
-    for cell in problem["cells"]
-    if cell.get("cell_type") == "markdown" and "".join(cell.get("source", [])).startswith("### **")
-]
-solution_questions = [
-    "".join(cell.get("source", []))
-    for cell in solution["cells"]
-    if cell.get("cell_type") == "markdown" and "".join(cell.get("source", [])).startswith("### **")
-]
-
-assert problem_questions[:14] == solution_questions[:14], "question order mismatch"
-assert sum(
-    text.startswith("### **") and any(f"{{n}}." in text for n in range(1, 15))
-    for text in problem_questions
-) >= 14, "expected 14 scored questions"
-
-source_text = "\\n".join(
-    "".join(cell.get("source", []))
-    for cell in solution["cells"]
-    if cell.get("cell_type") == "code"
-)
-{answer_checks}
-
-missing_raw = [path.name for path in raw_files if not path.exists()]
-if missing_raw:
-    print("missing raw files:", missing_raw)
-else:
-    print("raw files detected: {raw_names}")
-
-if submission_csv.exists():
-    print("submission file exists:", submission_csv)
+if __name__ == "__main__":
+    raise SystemExit(run_package_validation(PACKAGE_ROOT, CONFIG))
 """
+
+
+def _derive_required_sections(profile: ExamProfile) -> list[str]:
+    sections: list[str] = []
+    seen: set[str] = set()
+    for question in profile.questions:
+        if question.section and question.section not in seen:
+            seen.add(question.section)
+            sections.append(question.section)
+    return sections
