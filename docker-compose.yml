@@ -11,7 +11,12 @@ services:
       JUPYTER_TOKEN: ${JUPYTER_TOKEN:-aice-jupyter-token}
     volumes:
       - ./notebooks:/workspace/notebooks
+      - ./scripts:/workspace/scripts:ro
     working_dir: /workspace
+    command:
+      - start-notebook.py
+      - --ServerApp.root_dir=/workspace/notebooks
+      - --IdentityProvider.token=${JUPYTER_TOKEN:-aice-jupyter-token}
     restart: unless-stopped
 
   jupyter-mcp:

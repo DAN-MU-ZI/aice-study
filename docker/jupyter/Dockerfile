@@ -1,49 +1,19 @@
 # syntax=docker/dockerfile:1.7
 
-FROM python:3.11-slim AS builder
+FROM quay.io/jupyter/tensorflow-notebook:b74418220768
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    JUPYTER_PORT=8888 \
-    VIRTUAL_ENV=/opt/venv \
-    PATH="/opt/venv/bin:${PATH}"
+USER root
 
-WORKDIR /build
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN python -m venv "${VIRTUAL_ENV}"
+WORKDIR /workspace
 
 COPY requirements.txt /tmp/requirements.txt
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m pip install --upgrade pip \
-    && python -m pip install -r /tmp/requirements.txt
-
-FROM python:3.11-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    JUPYTER_PORT=8888 \
-    VIRTUAL_ENV=/opt/venv \
-    PATH="/opt/venv/bin:${PATH}"
-
-WORKDIR /workspace
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /opt/venv /opt/venv
-
-RUN mkdir -p /workspace/notebooks
+    python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -r /tmp/requirements.txt \
+    && mkdir -p /workspace/notebooks \
+    && chown -R "${NB_UID}:${NB_GID}" /workspace
 
 EXPOSE 8888
 
-CMD ["sh", "-c", "jupyter lab --ip=0.0.0.0 --port=${JUPYTER_PORT} --no-browser --allow-root --IdentityProvider.token=\"${JUPYTER_TOKEN:-aice-jupyter-token}\" --notebook-dir=/workspace/notebooks"]
+USER ${NB_UID}
