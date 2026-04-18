@@ -3,10 +3,13 @@ interface:
   short_description: "Generate official AICE 14-question exam notebooks from Kaggle tabular data"
   icon_small: "./assets/kaggle-aice.svg"
   icon_large: "./assets/kaggle-aice.svg"
-  default_prompt: "Use $kaggle-aice-associate-builder to turn a Kaggle tabular source into paired AICE Associate 문제지/해설지 notebooks in sample exam tone."
+  default_prompt: "Use $kaggle-aice-associate-builder to turn a Kaggle tabular source into paired AICE Associate 문제지/해설지 notebooks with sample-exam cell rhythm, explicit guide blocks, starter-code scaffolding, and Korean exam wording."
 
 dependencies:
   tools:
     - type: "mcp"
       value: "kaggle"
       description: "Kaggle MCP tools for dataset and competition discovery, metadata lookup, and downloads"
+    - type: "mcp"
+      value: "jupyter"
+      description: "Jupyter MCP tools for live sample-notebook inspection, notebook-native cell edits, execution, and artifact checks in the Docker Jupyter workspace"
