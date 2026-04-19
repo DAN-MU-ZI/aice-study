@@ -98,6 +98,7 @@ This is the default pattern when names, paths, output variables, ratios, or cons
 ```
 
 Do not compress this pattern into a title cell plus a generic comment-only answer cell when the guide carries scoring constraints.
+Do not add another bullet list above this guide cell that repeats the same `(N-1)` / `(N-2)` actions in different words. The task should be stated once, and the guide should only carry constraints.
 
 ## Block Set G: Chart + Interpretation Split
 
@@ -160,6 +161,7 @@ answer_7
 ```
 
 Prefer this over a vague "오류를 정정하시오" prompt with no visible target. Do not replace this with a single generic answer cell.
+Also avoid pairing this with a second markdown bullet list that restates the same bug-fix task. Keep one prompt cell and one guide cell.
 
 ## Block Set I: Pre-Run Notice + Shared Setup
 

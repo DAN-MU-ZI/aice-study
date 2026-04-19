@@ -27,6 +27,7 @@ The stable core rules are:
 - no answer leakage in `problem.ipynb`
 - format-first validation before execution-first validation
 - sample-level cell rhythm and guide detail
+- single writer, strong evaluator, iterative patch loop by default
 
 ## Required References
 
@@ -82,13 +83,46 @@ If preflight fails, do not continue into notebook drafting and do not improvise 
 1. Inspect the real dataset before writing any question.
 2. Confirm task type, target column, file names, row counts, likely ID columns, missingness, class balance, and whether the exam should use only the public training file.
 3. Design the notebook package strictly from `references/aice-associate-blueprint.md`.
-4. Draft `solution.ipynb` first so the full workflow, variable names, metrics, artifacts, and cell roles are fixed before exam scaffolding is written.
+4. Assign one writer pass to draft `solution.ipynb` first so the full workflow, variable names, metrics, artifacts, and cell roles are fixed before exam scaffolding is written.
 5. Derive `problem.ipynb` from the completed solution notebook by preserving question order, cell rhythm, and cell role while removing answer leakage.
 6. Use `references/notebook-snippets.md` only for exact block shapes, not for changing the blueprint logic.
-7. Generate both notebooks and required artifacts under the dataset folder.
-8. Perform a format-first review before running execution-heavy validation.
-9. Run execution and validation, preferably through Docker.
-10. Perform the final review checklist in this file before finishing.
+7. Run a strong evaluator pass against the sample structure, blueprint, and visible answer surface before asking for any rewrite.
+8. Patch the same notebook pair iteratively until the evaluator findings are resolved. Prefer patching the existing draft over restarting from scratch.
+9. Generate both notebooks and required artifacts under the dataset folder.
+10. Perform a format-first review before running execution-heavy validation.
+11. Run execution and validation, preferably through Docker.
+12. Perform the final review checklist in this file before finishing.
+
+## Agent Process
+
+Default orchestration for notebook generation is:
+
+1. one writer creates the draft
+2. one strong evaluator compares it against the sample, blueprint, and visible answer surface
+3. the writer or main agent patches the existing draft
+4. repeat until the evaluator findings are closed
+
+Use this process unless there is a clear reason not to.
+
+### Default Pattern
+
+- Prefer a single writer for each dataset-specific package.
+- Prefer one strong evaluator loop over multiple competing writer drafts.
+- Prefer patch-level rewrites to full rewrites once a draft exists.
+
+### When Parallel Writers Are Allowed
+
+Parallel writers are allowed only when at least one of these is true:
+
+- multiple independent datasets are being generated at the same time
+- the user explicitly asks for competing drafts or alternatives
+- the current draft is so structurally wrong that patching is less efficient than a clean restart
+
+Even in those cases:
+
+- do not create `baseline`, `guided`, `guided-v2` style competing drafts for the same dataset by default
+- keep one evaluator standard and compare all drafts against the same rubric
+- converge quickly to one winning draft, then continue with iterative patching on that draft only
 
 ## Non-Negotiables
 
@@ -115,6 +149,8 @@ If preflight fails, do not continue into notebook drafting and do not improvise 
 - Do not let a graded question end as a title-only prompt when the student needs variable names, split ratios, metrics, file paths, or output constraints.
 - Do not introduce solution-only helper cells that change the scoring surface or the visible answer shape.
 - Do not let validation or comparison questions drift away from the established `X_valid`, `y_valid` flow after train/valid split has been introduced.
+- Do not stack two layers of subpart bullets for the same block. If `(N-1)` and `(N-2)` are already stated in the question description cell, the guide cell must only carry concrete constraints, not restate the same subparts in expanded prose.
+- Do not create a visually dense block by repeating the same task once in the title markdown and again in the guide markdown. Keep at most one task-description layer plus one constraint-guide layer.
 
 ## Failure Conditions
 
@@ -124,6 +160,7 @@ Treat the notebook package as not ready if any of the following is true:
 - `problem.ipynb` leaks solved answers, solved placeholders, or direct textual hints
 - question order or cell role differs between `problem.ipynb` and `solution.ipynb`
 - a block that should use guide markdown, split answer cells, or starter code has been flattened into a vague shorter block
+- a block repeats `(N-1)` / `(N-2)` task bullets in both the question markdown and the guide markdown, making the answer surface denser than the sample
 - answer variables are routed through hidden helper variables instead of the visible graded structure
 - validation questions use train-all or test data where the block should continue using `X_valid`, `y_valid`
 - the notebook bytes start with UTF-8 BOM
@@ -138,6 +175,7 @@ Before finishing, verify all of the following in this order.
 - the question count, section distribution, and notebook rhythm match the blueprint
 - front matter matches the blueprint and includes the required caution style
 - guide density is sufficient for blocks that depend on names, ratios, seeds, metrics, or output paths
+- guide density is not achieved by repetition; each block should have one visible task statement and one non-duplicative guide block at most
 - `problem.ipynb` contains no answer leakage
 - `problem.ipynb` and `solution.ipynb` preserve the same question order and the same cell role pattern
 - no graded block was compressed into a generic comment-only answer cell

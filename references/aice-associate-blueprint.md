@@ -106,6 +106,8 @@ Match the canonical structure on:
 Avoid these drifts away from the canonical structure:
 
 - collapsing a guide markdown cell into a shorter title-only question
+- duplicating the same `(N-1)` / `(N-2)` task wording in both the question markdown and the guide markdown
+- turning one clean question block into `question bullets + guide bullets` that restate the same actions twice
 - replacing blank-filled starter code with a generic comment-only code cell
 - removing explicit variable names, helper function names, seeds, split ratios, metric names, output paths, or callback names that the problem statement should state
 - compressing a multi-step question into one vague instruction
@@ -126,6 +128,12 @@ Guide markdown is required when the student needs any of the following to answer
 - helper function or model argument that the problem intends to assess
 
 A title-only question is acceptable only when the task is genuinely trivial and no hidden constraints are needed.
+
+Guide markdown is for constraints, not for repeating the prompt.
+
+- Use the question markdown to state the task once.
+- Use the guide markdown to state concrete constraints such as dataframe names, variable names, ratios, metrics, file paths, allowable answer forms, or model arguments.
+- If the question markdown already lists `(N-1)` and `(N-2)` subparts, the guide markdown should refine those subparts rather than restating them.
 
 ## Question Types
 
@@ -172,8 +180,10 @@ Before finalizing a question block, ask:
 3. Should this block use placeholders or starter code instead of a blank comment cell?
 4. Should this block require a separate written answer cell for the interpreted result?
 5. Should the solution notebook preserve the exact same answer surface and cell roles for this block?
+6. Does this block restate the same task in both the question cell and the guide cell?
 
 If the answer is yes, keep the richer scaffold.
+If question 6 is yes, remove one layer and keep only the non-duplicative version.
 
 ## Explicit Failure Patterns
 
@@ -181,6 +191,7 @@ Treat these as structure failures, not minor style issues:
 
 - guide omission in a block that depends on named inputs, outputs, ratios, metrics, or paths
 - a generic comment-only code cell where a guide or starter-code scaffold should exist
+- a duplicated prompt surface where the same subpart instructions appear once in a question bullet list and again in a guide bullet list
 - a bug-fix prompt that does not expose a realistic broken code target
 - a chart-reading question that loses its separate interpretation answer surface
 - `answer_*_blank_*`, `answer_*_model`, or similar helper-answer patterns that are not visible as part of the graded problem structure
