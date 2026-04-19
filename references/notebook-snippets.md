@@ -65,12 +65,13 @@
 ## 블록 세트 E: 단순 직접 코딩 질문
 
 ```md
-### **1. 분석에 필요한 `pandas`와 `numpy`를 각각 `pd`, `np` 별칭으로 불러오시오.** [5점]
+### **1. 분석에 필요한 라이브러리를 먼저 불러오려고 합니다.**
+### **`pandas`와 `numpy`를 각각 `pd`, `np` 별칭으로 불러오세요.** [5점]
 ---
 ```
 
 ```python
-# (1) 여기에 답안 코드를 작성하시오.
+# (1) 여기에 답안 코드를 작성하세요.
 ```
 
 ```md
@@ -80,7 +81,8 @@
 ## 블록 세트 F: 질문 + 가이드 + 코드
 
 ```md
-### **2. 학습용 데이터를 읽어와 데이터프레임 `train_df`에 할당하고 상위 3개 행을 출력하시오.** [5점]
+### **학습용 데이터를 읽어와 확인하려고 합니다.**
+### **데이터프레임 `train_df`에 할당하고 상위 3개 행을 출력하세요.** [5점]
 ---
 ```
 
@@ -92,7 +94,7 @@
 ```
 
 ```python
-# (2) 여기에 답안 코드를 작성하시오.
+# (2) 여기에 답안 코드를 작성하세요.
 ```
 
 ```md
@@ -102,22 +104,23 @@
 ## 블록 세트 G: 차트 + 해석 분할
 
 ```md
-### **3. `Pclass` 분포를 시각화하고 가장 많은 승객이 속한 객실 등급을 확인하시오.** [10점]
+### **시각화를 통해 `Pclass` 분포를 파악하려고 합니다.**
+### **가장 많은 승객이 속한 객실 등급을 확인하세요.** [10점]
 ---
 ```
 
 ```md
 * 가이드
-- **(3-1)** `seaborn`을 사용해 `Pclass` countplot을 그리시오.
-- **(3-2)** 가장 많은 승객이 속한 객실 등급 값을 답안 셀에 직접 입력하시오.
+- **(3-1)** `seaborn`을 사용해 `Pclass` countplot을 그리세요.
+- **(3-2)** 가장 많은 승객이 속한 객실 등급 값을 답안 셀에 직접 입력하세요.
 ```
 
 ```python
-# (3-1) 여기에 답안 코드를 작성하시오.
+# (3-1) 여기에 답안 코드를 작성하세요.
 ```
 
 ```python
-# (3-2) 여기에 답안을 입력하시오. 실행은 필요하지 않음
+# (3-2) 여기에 답안을 입력하세요. 실행은 필요하지 않음
 ```
 
 ```md
@@ -127,7 +130,8 @@
 ## 블록 세트 H: 버그 수정 또는 빈칸 채우기
 
 ```md
-### **7. 아래 starter code의 빈칸을 채워 학습용 특성과 타깃을 분리하시오.** [10점]
+### **모델링에 사용할 입력값과 정답값을 분리하려고 합니다.**
+### **아래 starter code의 빈칸을 채워 학습용 특성과 타깃을 분리하세요.** [10점]
 ---
 ```
 
@@ -140,7 +144,7 @@
 ```
 
 ```python
-# (코드 셀) starter code의 빈칸을 채우고 실행하시오.
+# (코드 셀) starter code의 빈칸을 채우고 실행하세요.
 drop_cols = [<#7-1>]
 feature_cols = [c for c in train_df.columns if c not in drop_cols]
 train_features = train_df[feature_cols].copy()
@@ -148,11 +152,11 @@ y = train_df[<#7-2>].copy()
 ```
 
 ```python
-# (7-1) 여기에 답안을 입력하시오. 실행은 필요하지 않음
+# (7-1) 여기에 답안을 입력하세요. 실행은 필요하지 않음
 ```
 
 ```python
-# (7-2) 여기에 답안을 입력하시오. 실행은 필요하지 않음
+# (7-2) 여기에 답안을 입력하세요. 실행은 필요하지 않음
 ```
 
 ```md
@@ -162,7 +166,7 @@ y = train_df[<#7-2>].copy()
 ## 블록 세트 I: 사전 실행 알림 + 공통 설정
 
 ```md
-> **<span style="color:red">다음 문항을 풀기 전에 </span>아래 코드를 먼저 실행하시오.**
+> **<span style="color:red">다음 문항을 풀기 전에 </span>아래 코드를 먼저 실행하세요.**
 ```
 
 ```python
@@ -178,7 +182,7 @@ warnings.filterwarnings("ignore")
 ## 블록 세트 J: 딥러닝 섹션
 
 ```md
-> **<span style="color:red">다음 문항을 풀기 전에 </span>아래 setup 셀을 먼저 실행하시오.**
+> **<span style="color:red">다음 문항을 풀기 전에 </span>아래 setup 셀을 먼저 실행하세요.**
 ```
 
 ```python
@@ -191,18 +195,19 @@ tf.keras.utils.set_random_seed(7)
 ```
 
 ```md
-### **13. 아래 제약을 만족하는 딥러닝 분류 모델을 구성하고 검증 정확도를 `answer_13`에 저장하시오.** [10점]
+### **딥러닝 분류 모델을 구성하고 성능을 확인하려고 합니다.**
+### **아래 제약을 만족하는 모델을 구성하고 검증 정확도를 `answer_13`에 저장하세요.** [10점]
 ---
 ```
 
 ```md
 * 가이드
-- hidden layer는 2개 이상 사용하시오.
-- hidden layer activation은 `relu`를 사용하시오.
-- output layer activation은 `sigmoid`를 사용하시오.
-- optimizer는 `adam`, loss는 `binary_crossentropy`를 사용하시오.
-- `EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)`를 사용하시오.
-- 검증 데이터는 기존 `X_valid`, `y_valid` 흐름을 유지하시오.
+- hidden layer는 2개 이상 사용하세요.
+- hidden layer activation은 `relu`를 사용하세요.
+- output layer activation은 `sigmoid`를 사용하세요.
+- optimizer는 `adam`, loss는 `binary_crossentropy`를 사용하세요.
+- `EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)`를 사용하세요.
+- 검증 데이터는 기존 `X_valid`, `y_valid` 흐름을 유지하세요.
 ```
 
 ````md
@@ -210,7 +215,7 @@ tf.keras.utils.set_random_seed(7)
 ````
 
 ```python
-# (코드 셀) starter code의 빈칸을 채우고 실행하시오.
+# (코드 셀) starter code의 빈칸을 채우고 실행하세요.
 model = Sequential([
     <#13-1>
 ])
@@ -219,11 +224,11 @@ estop = EarlyStopping(monitor='val_loss', <#13-2>=10, restore_best_weights=True)
 ```
 
 ```python
-# (13-1) 여기에 답안을 입력하시오. 실행은 필요하지 않음
+# (13-1) 여기에 답안을 입력하세요. 실행은 필요하지 않음
 ```
 
 ```python
-# (13-2) 여기에 답안을 입력하시오. 실행은 필요하지 않음
+# (13-2) 여기에 답안을 입력하세요. 실행은 필요하지 않음
 ```
 
 ```md
