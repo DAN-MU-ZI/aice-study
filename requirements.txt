@@ -6,3 +6,4 @@ jupyter-mcp-tools==0.1.6
 ipykernel
 datalayer_pycrdt==0.12.17
 xgboost==2.1.4
+mermaido==0.2.0
