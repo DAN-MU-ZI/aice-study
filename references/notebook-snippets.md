@@ -213,12 +213,8 @@ tf.keras.utils.set_random_seed(7)
 ```
 
 ````md
-```mermaid
-graph LR
-    Input([입력층]) --> Dense1[Dense 32 relu]
-    Dense1 --> Drop1[Dropout 0.2]
-    Drop1 --> Dense2[Dense 16 relu]
-    Dense2 --> Output([Dense 1 sigmoid])
+```md
+![딥러닝 구조도](assets/deep-learning-architecture.svg)
 ```
 ````
 

@@ -273,8 +273,8 @@ When deep learning is included and the question is scaffold-heavy, preserve the 
 - explicit architecture constraints
 - exact optimizer, loss, metric, callback, epoch, and batch-size requirements when the question design depends on them
 - topology diagram or equivalent visual reference when architecture is part of the graded prompt
-- prefer a Mermaid diagram in the notebook markdown so the architecture is visible in both `problem.ipynb` and `solution.ipynb`
-- when starter code asks the student to fill architecture blanks, place the Mermaid diagram immediately before the setup notice or starter cell and keep the diagram consistent with the solution architecture
+- prefer an image asset rendered from Mermaid source or an equivalent diagram source, then embed it in the notebook markdown so the architecture is visible in both `problem.ipynb` and `solution.ipynb`
+- when starter code asks the student to fill architecture blanks, place the rendered architecture image immediately before the setup notice or starter cell and keep the image consistent with the solution architecture
 - placeholder-based starter code when the student is not expected to write the entire block from scratch
 
 ## Writing Rules

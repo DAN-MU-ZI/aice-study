@@ -334,7 +334,9 @@ docker compose up --build jupyter jupyter-mcp
 ## Docker Generation Rule
 
 - Generate notebook packages through Docker, not host `python`.
-- Use `docker compose run --rm --no-deps jupyter python /workspace/scripts/generate_aice_associate.py --profile /workspace/scripts/aice_generator/specs/<profile-json> --output-dir /workspace/notebooks/<dataset-dir>`.
+- Use `docker compose run --rm --no-deps jupyter python /workspace/scripts/generate_aice_associate.py --profile /workspace/notebooks/<dataset-dir>/profile.json --output-dir /workspace/notebooks/<dataset-dir>`.
+- If the package uses Mermaid source assets, run `docker compose run --rm --no-deps jupyter python /workspace/scripts/render_mermaid_assets.py /workspace/notebooks/<dataset-dir>` to refresh the `.svg` files.
+- Mermaid rendering uses `mermaido`; prepare the renderer once in the environment with `mermaido install`.
 - Generated `.ipynb` files must be UTF-8 without BOM.
 
 ---
