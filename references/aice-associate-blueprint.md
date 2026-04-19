@@ -6,12 +6,14 @@ For canonical markdown/code block shapes, also load `references/notebook-snippet
 
 ## Source of Truth
 
-- Use the current official structure as the scoring authority:
+Use the current official structure as the scoring authority:
+
 - `데이터 분석 5~6문항 / 30점`
 - `데이터 전처리 4~5문항 / 30점`
 - `AI 모델링 4~5문항 / 40점`
 - Total: `14문항 / 100점 / 90분`
-- Ignore any legacy `20/30/50` material. The official structure above is the only scoring source of truth.
+
+Ignore any legacy `20/30/50` material. The official structure above is the only scoring source of truth.
 
 ## Core Package Shape
 
@@ -29,8 +31,8 @@ Use `problem.ipynb` and `solution.ipynb` as fixed canonical filenames. Do not re
 Draft order is mandatory:
 
 1. write `solution.ipynb` first
-2. verify the solved notebook structure, variable names, metrics, and artifacts
-3. derive `problem.ipynb` from that solved notebook without changing question order
+2. verify the solved notebook structure, variable names, metrics, artifacts, and cell roles
+3. derive `problem.ipynb` from that solved notebook without changing question order, cell rhythm, or answer surface
 
 Do not invent the exam scaffold independently and then backfill the solution later.
 
@@ -44,7 +46,7 @@ Include:
 - domain
 - goal
 - short business scenario
-- `[유의사항]`
+- `[주의사항]`
 - column description table
 - section headers with point labels
 - answer cells, blank cells, or intentionally wrong starter code when needed
@@ -68,6 +70,8 @@ Add:
 Do not turn the solution notebook into a long-form tutorial.
 Treat the solution notebook as the canonical source of truth for execution order, helper variables, metrics, and generated artifacts.
 
+The solution notebook must preserve the visible answer form of the problem notebook. If the problem notebook uses a dedicated written-answer cell, direct `answer_n =` cell, or split `(N-1)` / `(N-2)` structure, keep that same structure in the solution notebook rather than routing through a separate helper-answer convention.
+
 ## Required Front Matter
 
 Write the following before question 1:
@@ -76,12 +80,12 @@ Write the following before question 1:
 - domain
 - goal
 - short business scenario tied to the dataset
-- `[유의사항]` in Korean
+- `[주의사항]` in Korean
   - 각 문항의 답안은 반드시 지정된 답안 셀에 입력해야 합니다.
-  - 제공된 시험문항 셀을 삭제하거나 답안 위치가 아닌 다른 셀에 작성하면 채점되지 않습니다.
+  - 제공된 시험문항 셀을 삭제하거나 답안 위치가 아닌 다른 셀에 답안을 작성하면 채점되지 않습니다.
   - 답안 작성 전에 문항에 제시된 가이드를 확인해야 합니다.
   - 문항에 변수명이 제시된 경우 반드시 해당 변수명을 사용해야 합니다.
-  - 시험 문항과 데이터 등을 무단으로 촬영, 공유, 유포할 경우 제재를 받을 수 있습니다.
+  - 제출 파일 경로가 제시된 경우 반드시 해당 경로를 사용해야 합니다.
 - column description table based on actual dataset columns
 
 Do not rely on any external exam reference to decide tone or layout. Derive both from the official structure and the rules in this file.
@@ -103,8 +107,25 @@ Avoid these drifts away from the canonical structure:
 
 - collapsing a guide markdown cell into a shorter title-only question
 - replacing blank-filled starter code with a generic comment-only code cell
-- removing explicit variable names, helper function names, seeds, split ratios, metric names, or callback names that the problem statement should state
+- removing explicit variable names, helper function names, seeds, split ratios, metric names, output paths, or callback names that the problem statement should state
 - compressing a multi-step question into one vague instruction
+- introducing a solution-only helper-answer cell that has no visible partner in the problem notebook
+
+## Guide Minimum Contract
+
+Guide markdown is required when the student needs any of the following to answer correctly:
+
+- dataframe or series name
+- target variable name
+- train/valid split ratio
+- seed or `random_state`
+- `stratify` requirement
+- metric name
+- file path or save path
+- explicit output variable name such as `answer_7`
+- helper function or model argument that the problem intends to assess
+
+A title-only question is acceptable only when the task is genuinely trivial and no hidden constraints are needed.
 
 ## Question Types
 
@@ -115,10 +136,10 @@ Use direct coding as the default form. Add the other types only when they improv
 Typical pattern:
 
 1. Markdown title cell
-2. Markdown guide cell
+2. Markdown guide cell when constraints matter
 3. Code answer cell
 
-Prefer explicit guide bullets such as dataframe name, variable name, ratio, seed, or helper function when the task depends on them.
+Prefer explicit guide bullets such as dataframe name, variable name, ratio, seed, metric, or output path when the task depends on them.
 
 ### Type B: bug fixing
 
@@ -126,11 +147,15 @@ Use when a preprocessing or modeling step benefits from correcting realistic sta
 
 Prefer realistic broken starter code plus a narrow fix target over a generic "오류를 정정하시오" instruction alone.
 
+The fix target should be concrete enough that the student can identify what to change, and narrow enough that the answer surface stays stable between `problem.ipynb` and `solution.ipynb`.
+
 ### Type C: fill in the blanks
 
 Use sparingly for modeling or evaluation steps that benefit from answer placeholders.
 
-This is especially useful when students should complete method names, callback arguments, or model-layer fragments inside starter code.
+This is especially useful when students should complete method names, callback arguments, model-layer fragments, or key exclusion lists inside starter code.
+
+Do not convert a placeholder-based block into a generic blank answer cell during derivation.
 
 ### Type D: result interpretation
 
@@ -146,30 +171,42 @@ Before finalizing a question block, ask:
 2. Should this block provide bullet guidance instead of one sentence?
 3. Should this block use placeholders or starter code instead of a blank comment cell?
 4. Should this block require a separate written answer cell for the interpreted result?
+5. Should the solution notebook preserve the exact same answer surface and cell roles for this block?
 
 If the answer is yes, keep the richer scaffold.
+
+## Explicit Failure Patterns
+
+Treat these as structure failures, not minor style issues:
+
+- guide omission in a block that depends on named inputs, outputs, ratios, metrics, or paths
+- a generic comment-only code cell where a guide or starter-code scaffold should exist
+- a bug-fix prompt that does not expose a realistic broken code target
+- a chart-reading question that loses its separate interpretation answer surface
+- `answer_*_blank_*`, `answer_*_model`, or similar helper-answer patterns that are not visible as part of the graded problem structure
+- any post-split evaluation block that drifts from `X_valid`, `y_valid` to train-all or test data without explicit question intent
 
 ## Official Section Plan
 
 ### 1. 데이터 분석 [5~6문항 / 30점]
 
-- 필요 라이브러리 설치
+- 필요한 라이브러리 로딩
 - 데이터 구성 및 특성 파악
-- 데이터 품질 점검
+- 데이터 요약과 시각화
 
 ### 2. 데이터 전처리 [4~5문항 / 30점]
 
-- 데이터 결측치/이상치 등 처리
-- 데이터 스케일링
-- 라벨 인코딩/원핫 인코딩
-- Train/Test 데이터셋 분할
+- 결측치 및 이상치 처리
+- 데이터 정리
+- 인코딩 또는 스케일링
+- Train/Valid 분리
 
 ### 3. AI 모델링 [4~5문항 / 40점]
 
 - 머신러닝 모델 학습
-- 딥러닝 모델 학습
-- 모델 성능 평가 및 시뮬레이션
-- 모델 성능 개선 및 그래픽 출력
+- 딥러닝 모델 학습 또는 합리적 대체 문항
+- 모델 성능 평가 및 비교
+- 최종 제출 생성 또는 성능 개선 시각화
 
 ## Distribution Strategy
 
@@ -190,12 +227,12 @@ One common anchor flow is:
 6. Outlier or ID-column handling
 7. Missing-value handling
 8. Encoding or scaling
-9. Train/test split
+9. Train/valid split
 10. First ML model
 11. Second ML model or feature importance
 12. Metric evaluation and comparison
 13. Deep-learning construction or justified replacement task
-14. Learning-curve or improvement plot
+14. Submission generation or learning-curve style follow-up
 
 Use this as a canonical rhythm anchor, not a mandatory one-to-one script.
 
@@ -221,6 +258,8 @@ Avoid:
 
 If the competition exposes an official metric, use it in at least one modeling question when feasible.
 
+When train/valid split has been introduced, keep later model comparison, confusion-matrix, threshold, and deep-learning validation blocks on the `X_valid`, `y_valid` path unless the question explicitly switches to final submission generation.
+
 ## Deep Learning Guidance
 
 If TensorFlow is available and the dataset size is reasonable, include at least one neural-network question plus one related evaluation or history-plot question.
@@ -241,7 +280,7 @@ When deep learning is included and the question is scaffold-heavy, preserve the 
 ## Writing Rules
 
 - Write notebook text in Korean by default.
-- Save notebooks, markdown files, CSV summaries, and other Korean text artifacts in UTF-8.
+- Save notebooks, markdown files, CSV summaries, and other Korean text artifacts in UTF-8 without BOM.
 - Use concrete paths, file names, columns, and variables once the dataset is known.
 - Keep section labels and point labels explicit.
 - Use short, imperative exam wording.
@@ -250,13 +289,17 @@ When deep learning is included and the question is scaffold-heavy, preserve the 
 
 ## Verification Preference
 
-- Prefer verifying the executed `solution.ipynb` itself over re-solving the task in a separate script.
-- The default verification flow is:
-- execute `solution.ipynb`
-- inspect notebook-visible outputs such as charts, printed metrics, tables, and saved-file messages
-- inspect generated artifacts such as submission files or summary CSVs
-- confirm the problem and solution notebooks still share the same question order
-- inspect `problem.ipynb` to ensure scored answer cells are still blank, intentionally incomplete, or intentionally incorrect as designed
-- perform one final review pass before closing the task, checking naming, section counts, score distribution, answer leakage, and notebook flow one more time
-- A `.py` validator may be used as a thin automation wrapper for notebook execution and artifact checks.
-- Avoid writing validators that fully recompute the notebook answers from scratch unless the user explicitly asks for a second independent checker.
+Prefer format-first review, then execution-first review.
+
+The default verification flow is:
+
+1. inspect notebook pair structure, section counts, question rhythm, guide density, and answer leakage
+2. confirm the problem and solution notebooks still share the same question order and visible answer surface
+3. execute `solution.ipynb`
+4. inspect notebook-visible outputs such as charts, printed metrics, tables, and saved-file messages
+5. inspect generated artifacts such as submission files or summary CSVs
+6. inspect `problem.ipynb` to ensure scored answer cells are still blank, intentionally incomplete, or intentionally incorrect as designed
+7. perform one final review pass before closing the task, checking naming, section counts, score distribution, answer leakage, notebook flow, and validation-data consistency one more time
+
+A `.py` validator may be used as a thin automation wrapper for notebook execution and artifact checks.
+Avoid writing validators that fully recompute the notebook answers from scratch unless the user explicitly asks for a second independent checker.

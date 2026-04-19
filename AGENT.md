@@ -2,6 +2,11 @@
 
 Use the repository Docker environment as the default execution path for all notebook generation, validation, and Jupyter work.
 
+## Context Files
+
+- Read `retrobot/SKILL.md` as additional context when the task involves retrospective generation, session-log analysis, KPT writing, timeline updates, or Retrobot execution.
+- Follow `retrobot/SKILL.md` for Retrobot-specific behavior, including log discovery, KPT markdown structure, file output under `retros/`, and Git staging expectations.
+
 ## Default Environment
 
 - Default image: `aice-study-jupyter`
@@ -37,7 +42,7 @@ docker compose up --build -d jupyter jupyter-mcp
 ```bash
 docker compose run --rm --no-deps jupyter \
   python /workspace/scripts/generate_aice_associate.py \
-  --profile /workspace/scripts/aice_generator/specs/<profile-json> \
+  --profile /workspace/notebooks/<dataset-dir>/profile.json \
   --output-dir /workspace/notebooks/<dataset-dir>
 ```
 
@@ -46,7 +51,7 @@ docker compose run --rm --no-deps jupyter \
 ```bash
 docker compose run --rm --no-deps jupyter \
   python /workspace/scripts/generate_aice_associate.py \
-  --profile /workspace/scripts/aice_generator/specs/credit-card-fraud-associate.json \
+  --profile /workspace/notebooks/credit-card-fraud-associate/profile.json \
   --output-dir /workspace/notebooks/credit-card-fraud-associate
 ```
 
