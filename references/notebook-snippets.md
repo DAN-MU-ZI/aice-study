@@ -1,24 +1,22 @@
-# Notebook Snippets
+# 노트북 스니펫 (Notebook Snippets)
 
-Use this file only for concrete Block Set markdown/code shapes. The controlling rules live in `../SKILL.md`, and the structure contract lives in `aice-associate-blueprint.md`.
+이 파일은 `references/aice-associate-blueprint.md` 가이드라인에 정의된 구조를 실제로 구현하기 위한 마크다운 및 코드 블록 모음입니다. 규칙에 대한 상세 내용은 **Blueprint** 파일을 참조하고, 여기서는 복사하여 사용할 수 있는 패턴만 제공합니다.
 
-These snippets are examples of the desired cell rhythm. Reuse the pattern, not the literal dataset names.
+## 목차
 
-## Table of Contents
+- 블록 세트 A: 제목 + 시나리오
+- 블록 세트 B: 주의사항 셀
+- 블록 세트 C: 컬럼 설명
+- 블록 세트 D: 스페이서(Spacer) 셀
+- 블록 세트 E: 단순 직접 코딩 질문
+- 블록 세트 F: 질문 + 가이드 + 코드
+- 블록 세트 G: 차트 + 해석 분할
+- 블록 세트 H: 버그 수정 또는 빈칸 채우기
+- 블록 세트 I: 사전 실행 알림 + 공통 설정
+- 블록 세트 J: 딥러닝 섹션
+- 블록 세트 K: 종료 셀
 
-- Block Set A: Title + Scenario
-- Block Set B: Caution Cell
-- Block Set C: Column Description
-- Block Set D: Spacer Cell
-- Block Set E: Simple Direct-Coding Question
-- Block Set F: Question + Guide + Code
-- Block Set G: Chart + Interpretation Split
-- Block Set H: Bug-Fix or Blank-Fill
-- Block Set I: Pre-Run Notice + Shared Setup
-- Block Set J: Deep-Learning Section
-- Block Set K: Closing Cell
-
-## Block Set A: Title + Scenario
+## 블록 세트 A: 제목 + 시나리오
 
 ```md
 **AICE Associate <font color=red>실전문항</font>**
@@ -34,7 +32,7 @@ These snippets are examples of the desired cell rhythm. Reuse the pattern, not t
 ---
 ```
 
-## Block Set B: Caution Cell
+## 블록 세트 B: 주의사항 셀
 
 ```md
 #### **<span style="color:red">[주의사항]</span>**
@@ -45,10 +43,10 @@ These snippets are examples of the desired cell rhythm. Reuse the pattern, not t
 - setup 셀 선실행 지시가 있는 경우 해당 셀을 먼저 실행합니다.
 ```
 
-## Block Set C: Column Description
+## 블록 세트 C: 컬럼 설명
 
 ```md
-**[ 데이터 컬럼 설명 (`train.csv`, `test.csv`) ]**
+**[ 데이터 컬럼 설명 (`train.csv`) ]**
 
 | 컬럼명 | 설명 | 비고 |
 | --- | --- | --- |
@@ -57,16 +55,14 @@ These snippets are examples of the desired cell rhythm. Reuse the pattern, not t
 | Pclass | 객실 등급 | 범주형 |
 ```
 
-## Block Set D: Spacer Cell
+## 블록 세트 D: 스페이서(Spacer) 셀
 
 ```md
 <br>
 <br>
 ```
 
-## Block Set E: Simple Direct-Coding Question
-
-Use this only when the task is truly simple and does not need hidden constraints.
+## 블록 세트 E: 단순 직접 코딩 질문
 
 ```md
 ### **1. 분석에 필요한 `pandas`와 `numpy`를 각각 `pd`, `np` 별칭으로 불러오시오.** [5점]
@@ -77,9 +73,11 @@ Use this only when the task is truly simple and does not need hidden constraints
 # (1) 여기에 답안 코드를 작성하시오.
 ```
 
-## Block Set F: Question + Guide + Code
+```md
+# [정답]
+```
 
-This is the default pattern when names, paths, output variables, ratios, or constraints matter.
+## 블록 세트 F: 질문 + 가이드 + 코드
 
 ```md
 ### **2. 학습용 데이터를 읽어와 데이터프레임 `train_df`에 할당하고 상위 3개 행을 출력하시오.** [5점]
@@ -97,12 +95,11 @@ This is the default pattern when names, paths, output variables, ratios, or cons
 # (2) 여기에 답안 코드를 작성하시오.
 ```
 
-Do not compress this pattern into a title cell plus a generic comment-only answer cell when the guide carries scoring constraints.
-Do not add another bullet list above this guide cell that repeats the same `(N-1)` / `(N-2)` actions in different words. The task should be stated once, and the guide should only carry constraints.
+```md
+# [정답]
+```
 
-## Block Set G: Chart + Interpretation Split
-
-Use this when evidence generation and interpretation should be graded separately.
+## 블록 세트 G: 차트 + 해석 분할
 
 ```md
 ### **3. `Pclass` 분포를 시각화하고 가장 많은 승객이 속한 객실 등급을 확인하시오.** [10점]
@@ -123,9 +120,11 @@ Use this when evidence generation and interpretation should be graded separately
 # (3-2) 여기에 답안을 입력하시오. 실행은 필요하지 않음
 ```
 
-## Block Set H: Bug-Fix or Blank-Fill
+```md
+# [정답]
+```
 
-Use this when the assessment format is "fix the provided code" or "fill the critical blanks".
+## 블록 세트 H: 버그 수정 또는 빈칸 채우기
 
 ```md
 ### **7. 아래 starter code의 빈칸을 채워 학습용 특성과 타깃을 분리하시오.** [10점]
@@ -138,7 +137,6 @@ Use this when the assessment format is "fix the provided code" or "fill the crit
 - 제외할 열: `PassengerId`, `Name`, `Ticket`, `Cabin`, `Survived`
 - 특성 데이터프레임명: `train_features`
 - 타깃 시리즈명: `y`
-- 최종 특성 수를 `answer_7`에 저장하시오.
 ```
 
 ```python
@@ -147,9 +145,6 @@ drop_cols = [<#7-1>]
 feature_cols = [c for c in train_df.columns if c not in drop_cols]
 train_features = train_df[feature_cols].copy()
 y = train_df[<#7-2>].copy()
-
-answer_7 = len(feature_cols)
-answer_7
 ```
 
 ```python
@@ -160,10 +155,11 @@ answer_7
 # (7-2) 여기에 답안을 입력하시오. 실행은 필요하지 않음
 ```
 
-Prefer this over a vague "오류를 정정하시오" prompt with no visible target. Do not replace this with a single generic answer cell.
-Also avoid pairing this with a second markdown bullet list that restates the same bug-fix task. Keep one prompt cell and one guide cell.
+```md
+# [정답]
+```
 
-## Block Set I: Pre-Run Notice + Shared Setup
+## 블록 세트 I: 사전 실행 알림 + 공통 설정
 
 ```md
 > **<span style="color:red">다음 문항을 풀기 전에 </span>아래 코드를 먼저 실행하시오.**
@@ -179,12 +175,7 @@ import warnings
 warnings.filterwarnings("ignore")
 ```
 
-## Block Set J: Deep-Learning Section
-
-```md
-<br>
-<br>
-```
+## 블록 세트 J: 딥러닝 섹션
 
 ```md
 > **<span style="color:red">다음 문항을 풀기 전에 </span>아래 setup 셀을 먼저 실행하시오.**
@@ -215,9 +206,7 @@ tf.keras.utils.set_random_seed(7)
 ```
 
 ````md
-```md
 ![딥러닝 구조도](assets/deep-learning-architecture.svg)
-```
 ````
 
 ```python
@@ -237,7 +226,11 @@ estop = EarlyStopping(monitor='val_loss', <#13-2>=10, restore_best_weights=True)
 # (13-2) 여기에 답안을 입력하시오. 실행은 필요하지 않음
 ```
 
-## Block Set K: Closing Cell
+```md
+# [정답]
+```
+
+## 블록 세트 K: 종료 셀
 
 ```md
 ### **모든 문항이 제시되었습니다.**

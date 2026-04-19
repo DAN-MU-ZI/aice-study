@@ -331,12 +331,14 @@ docker compose up --build jupyter jupyter-mcp
 
 ---
 
-## Docker Generation Rule
+---
 
-- Generate notebook packages through Docker, not host `python`.
-- Use `docker compose run --rm --no-deps jupyter python /workspace/scripts/generate_aice_associate.py --profile /workspace/notebooks/<dataset-dir>/profile.json --output-dir /workspace/notebooks/<dataset-dir>`.
-- If the package uses Mermaid source assets, run `docker compose run --rm --no-deps jupyter python /workspace/scripts/render_mermaid_assets.py /workspace/notebooks/<dataset-dir>` to refresh the `.svg` files.
-- Mermaid rendering uses `mermaido`; prepare the renderer once in the environment with `mermaido install`.
-- Generated `.ipynb` files must be UTF-8 without BOM.
+## Docker 생성 규칙
+
+- 노트북 패키지는 호스트의 `python`이 아닌 Docker를 통해 생성하세요.
+- 다음 명령어를 사용합니다: `docker compose run --rm --no-deps jupyter python /workspace/scripts/generate_aice_associate.py --profile /workspace/notebooks/<dataset-dir>/profile.json --output-dir /workspace/notebooks/<dataset-dir>`.
+- 패키지가 Mermaid 소스 자산을 사용하는 경우, `docker compose run --rm --no-deps jupyter python /workspace/scripts/render_mermaid_assets.py /workspace/notebooks/<dataset-dir>`를 실행하여 `.svg` 파일을 새로고침하세요.
+- Mermaid 렌더링은 `mermaido`를 사용합니다. 환경에서 `mermaido install`을 한 번 실행하여 렌더러를 준비하세요.
+- 생성된 `.ipynb` 파일은 반드시 BOM 없는 UTF-8 형식이어야 합니다.
 
 ---

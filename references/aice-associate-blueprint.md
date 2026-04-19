@@ -1,316 +1,193 @@
-# AICE Associate Blueprint
+# AICE Associate 가이드라인
 
-Use this file as the detailed contract for drafting or reviewing an AICE-style notebook package.
+이 파일은 AICE 스타일의 노트북 패키지를 작성하거나 검토할 때 준수해야 하는 상세 가이드라인입니다.
 
-For canonical markdown/code block shapes, also load `references/notebook-snippets.md`. Keep this file focused on notebook-pair behavior, section planning, and dataset-adaptation guidance.
+구체적인 마크다운/코드 블록의 형태는 `references/notebook-snippets.md`를 참고하세요. 이 파일은 노트북 쌍(Pair)의 동작, 섹션 계획 및 데이터셋 적응 가이드에 집중합니다.
 
-## Source of Truth
+## 공식 기준 (Source of Truth)
 
-Use the current official structure as the scoring authority:
+현재의 공식 구조를 채점 권한의 기준으로 사용합니다:
 
 - `데이터 분석 5~6문항 / 30점`
 - `데이터 전처리 4~5문항 / 30점`
 - `AI 모델링 4~5문항 / 40점`
-- Total: `14문항 / 100점 / 90분`
+- 합계: `14문항 / 100점`
 
-Ignore any legacy `20/30/50` material. The official structure above is the only scoring source of truth.
+## 핵심 패키지 구성
 
-## Core Package Shape
+항상 다음 구조를 생성합니다:
 
-Always create:
+- `problem.ipynb` (문제용)
+- `solution.ipynb` (정답용)
+- `data/raw/` (원본 데이터)
 
-- `problem.ipynb`
-- `solution.ipynb`
-- `data/raw/`
-- `data/submissions/`
+## 노트북 쌍(Pair) 작성 규칙
 
-Use `problem.ipynb` and `solution.ipynb` as fixed canonical filenames. Do not replace them with dataset-specific notebook names.
+작성 순서는 반드시 다음을 따릅니다:
 
-## Notebook Pair Contract
+1. `solution.ipynb`를 먼저 작성합니다.
+2. 해결된 노트북의 구조, 변수명, 지표, 결과물 및 셀 역할을 확인합니다.
+3. 작성된 솔루션 노트북을 실행한 상태로 저장합니다.
+4. 3 의 결과를 검토하고 잘못되었다면 3을 수정합니다.
+5. 정답 노트북을 `problem.ipynb`로 복사하여 답안과 출력셀을 제거합니다. 
 
-Draft order is mandatory:
+### 문제 노트북 (Problem Notebook)
 
-1. write `solution.ipynb` first
-2. verify the solved notebook structure, variable names, metrics, artifacts, and cell roles
-3. derive `problem.ipynb` from that solved notebook without changing question order, cell rhythm, or answer surface
+문제 노트북은 실제 시험지처럼 보여야 합니다.
 
-Do not invent the exam scaffold independently and then backfill the solution later.
+포함 사항:
+- 시험 스타일의 타이틀 배너
+- 도메인 및 목표
+- 짧은 비즈니스 시나리오
+- `[주의사항]` (한국어)
+- 컬럼 설명 테이블
+- 점수가 표시된 섹션 헤더
+- 답안 셀, 빈 셀, 또는 의도적으로 틀린 스타터 코드
+- 데이터프레임명, 변수명, 헬퍼 함수 및 제약 조건을 명시한 가이드 마크다운 블록
+- 복잡한 전처리나 모델링의 경우 빈칸 채우기 형식의 스타터 코드
+- 해석 문항의 경우 근거 생성 셀과 텍스트 설명 셀을 분리
 
-### Problem Notebook
+### 정답 노트북 (Solution Notebook)
 
-Make the problem notebook look like a real exam paper.
+문제 노트북과 동일한 문항 순서 및 거의 동일한 셀 레이아웃을 유지합니다.
 
-Include:
+추가 사항:
+- 완성된 코드
+- 차트, 지표 및 최종 제출 파일 생성 결과가 포함된 가시적인 출력물
+- 짧은 참조용 정답 노트 (필요한 경우만)
 
-- exam-style title banner
-- domain
-- goal
-- short business scenario
-- `[주의사항]`
-- column description table
-- section headers with point labels
-- answer cells, blank cells, or intentionally wrong starter code when needed
-- guide markdown blocks that state dataframe names, variable names, helper functions, and exact constraints when the question requires them
-- placeholder-based starter code for scaffold-heavy preprocessing or modeling items when partial-code solving is the intended assessment format
-- separate written-answer cells for interpretation items when evidence generation and textual explanation should be graded separately
+주의 사항:
+- 솔루션 노트북을 긴 튜토리얼 형태로 만들지 마세요.
+- 실행 순서, 헬퍼 변수, 지표 및 생성된 결과물의 최종 기준점으로 취급합니다.
+- 문제 노트북에서 사용한 답안 셀 구조를 그대로 보존해야 합니다.
 
-Do not include final answers, final `answer_*` variables, hidden worked code, partially completed answer code, already-correct starter code for a scored item, precomputed metric values, or direct textual hints that reveal the answer.
-Build the problem notebook by subtracting answers from the solved notebook, not by redesigning the flow from scratch.
+## 필수 서두 (Front Matter)
 
-### Solution Notebook
+1번 문항 이전에 다음 내용을 작성합니다:
 
-Keep the same question order and almost the same cell layout as the problem notebook.
-
-Add:
-
-- completed code
-- visible outputs for charts, metrics, and final submission generation
-- short reference-answer notes only
-
-Do not turn the solution notebook into a long-form tutorial.
-Treat the solution notebook as the canonical source of truth for execution order, helper variables, metrics, and generated artifacts.
-
-The solution notebook must preserve the visible answer form of the problem notebook. If the problem notebook uses a dedicated written-answer cell, direct `answer_n =` cell, or split `(N-1)` / `(N-2)` structure, keep that same structure in the solution notebook rather than routing through a separate helper-answer convention.
-
-## Required Front Matter
-
-Write the following before question 1:
-
-- exam title
-- domain
-- goal
-- short business scenario tied to the dataset
-- `[주의사항]` in Korean
+- 시험 제목
+- 도메인 및 목표
+- 데이터셋과 연결된 짧은 비즈니스 시나리오
+- **[주의사항]** (한국어 고정)
   - 각 문항의 답안은 반드시 지정된 답안 셀에 입력해야 합니다.
   - 제공된 시험문항 셀을 삭제하거나 답안 위치가 아닌 다른 셀에 답안을 작성하면 채점되지 않습니다.
   - 답안 작성 전에 문항에 제시된 가이드를 확인해야 합니다.
   - 문항에 변수명이 제시된 경우 반드시 해당 변수명을 사용해야 합니다.
   - 제출 파일 경로가 제시된 경우 반드시 해당 경로를 사용해야 합니다.
-- column description table based on actual dataset columns
+- 실제 데이터셋 컬럼에 기반한 컬럼 설명 테이블
 
-Do not rely on any external exam reference to decide tone or layout. Derive both from the official structure and the rules in this file.
+## 표준 구조 계약 (Canonical Structure Contract)
 
-## Canonical Structure Contract
+이 가이드라인은 블록 리듬과 스캐폴드 밀도에 대한 계약입니다.
 
-Treat this blueprint as the contract for block rhythm and scaffolding density.
+다음을 준수하세요:
+- 타이틀 마크다운과 가이드 마크다운을 분리하는 빈도
+- `(N-1)`, `(N-2)` 형태의 소문항 사용 시점
+- 시각화/지표 질문과 별도의 주관식 답안 셀이 필요한 시점
+- 빈 셀 대신 빈칸이 포함된 스타터 코드를 사용하는 시점
+- 설정/임포트 셀이 종속된 문항 앞에 나타나는 시점
+- 모델 구조도 등의 시각적 스캐폴드가 포함되는 시점
 
-Match the canonical structure on:
+피해야 할 사항 (Drifts):
+- 가이드 마크다운 셀을 짧은 타이틀 전용 문항으로 축소
+- 빈칸 채우기 스타터 코드를 일반적인 주석 코드 셀로 대체
+- 문제에서 명시해야 할 변수명, 헬퍼 함수, 시드, 분할 비율, 지표명, 경로 등을 제거
 
-- how often title markdown and guide markdown are separated
-- when a question uses `(N-1)`, `(N-2)` style subparts
-- when a chart or metric question also requires a separate written answer cell
-- when starter code contains blanks instead of an empty answer cell
-- when setup/import cells appear before dependent questions
-- when a model topology diagram or equivalent visual scaffold is part of the prompt
+## 가이드 최소 기준
 
-Avoid these drifts away from the canonical structure:
+다음 정보가 필요한 경우 반드시 가이드 마크다운을 포함해야 합니다:
+- 데이터프레임 또는 시리즈 이름
+- 타깃 변수명
+- 학습/검증 데이터 분할 비율
+- 시드(seed) 또는 `random_state`
+- `stratify` 적용 여부
+- 평가 지표 이름
+- 파일 경로 또는 저장 경로
+- 문항에서 평가하려는 특정 헬퍼 함수나 모델 인자
 
-- collapsing a guide markdown cell into a shorter title-only question
-- duplicating the same `(N-1)` / `(N-2)` task wording in both the question markdown and the guide markdown
-- turning one clean question block into `question bullets + guide bullets` that restate the same actions twice
-- replacing blank-filled starter code with a generic comment-only code cell
-- removing explicit variable names, helper function names, seeds, split ratios, metric names, output paths, or callback names that the problem statement should state
-- compressing a multi-step question into one vague instruction
-- introducing a solution-only helper-answer cell that has no visible partner in the problem notebook
+가이드는 단순히 문제를 반복하는 것이 아니라 **제약 조건**을 명시하는 용도입니다.
 
-## Guide Minimum Contract
+## 문항 유형 (Question Types)
 
-Guide markdown is required when the student needs any of the following to answer correctly:
+직접 코딩을 기본 형식으로 하되, 평가 품질을 높이거나 데이터셋에 적합한 경우 다른 유형을 추가합니다.
 
-- dataframe or series name
-- target variable name
-- train/valid split ratio
-- seed or `random_state`
-- `stratify` requirement
-- metric name
-- file path or save path
-- explicit output variable name such as `answer_7`
-- helper function or model argument that the problem intends to assess
+- **유형 A (직접 코딩):** 제목 + 가이드 + 답안 셀. 가장 일반적인 패턴입니다.
+- **유형 B (버그 수정):** 실제적인 오류가 포함된 스타터 코드를 제공하고 이를 수정하게 합니다.
+- **유형 C (빈칸 채우기):** 모델링이나 복잡한 전처리에서 핵심 메서드나 인자 위치를 비워둡니다.
+- **유형 D (결과 해석):** 차트나 지표를 읽고 결과를 텍스트로 입력하게 합니다. 근거 생성과 해석을 분리합니다.
 
-A title-only question is acceptable only when the task is genuinely trivial and no hidden constraints are needed.
+## 셀 리듬 가드레일 (Cell Rhythm Guardrail)
 
-Guide markdown is for constraints, not for repeating the prompt.
+문항 블록을 확정하기 전에 다음을 자문해 보세요:
+1. 명확성이나 채점 분리를 위해 여러 셀을 사용해야 하는가?
+2. 한 문장보다는 글머리 기호 가이드를 제공해야 하는가?
+3. 빈 주석 셀 대신 스타터 코드나 빈칸 채우기를 사용해야 하는가?
+4. 해석 결과를 위해 별도의 주관식 답안 셀이 필요한가?
+5. 정답 노트북이 이 블록의 정답 표면과 셀 역할을 정확히 유지하는가?
+6. 질문 셀과 가이드 셀에서 동일한 작업을 반복하고 있지는 않은가?
 
-- Use the question markdown to state the task once.
-- Use the guide markdown to state concrete constraints such as dataframe names, variable names, ratios, metrics, file paths, allowable answer forms, or model arguments.
-- If the question markdown already lists `(N-1)` and `(N-2)` subparts, the guide markdown should refine those subparts rather than restating them.
+## 명시적 실패 패턴 (Failure Patterns)
 
-## Question Types
+다음을 단순한 스타일 문제가 아닌 **구조적 결함**으로 간주합니다:
+- 이름, 경로, 비율 등이 필요한 블록에서 가이드를 누락함
+- 가이드나 스캐폴드가 있어야 할 자리에 일반 주석 코드 셀만 있음
+- 질문과 가이드에서 동일한 지침이 중복됨
+- 차트 읽기 문항에서 별도의 해석 답안 공간이 사라짐
 
-Use direct coding as the default form. Add the other types only when they improve assessment quality or fit the dataset naturally.
-
-### Type A: direct coding
-
-Typical pattern:
-
-1. Markdown title cell
-2. Markdown guide cell when constraints matter
-3. Code answer cell
-
-Prefer explicit guide bullets such as dataframe name, variable name, ratio, seed, metric, or output path when the task depends on them.
-
-### Type B: bug fixing
-
-Use when a preprocessing or modeling step benefits from correcting realistic starter code.
-
-Prefer realistic broken starter code plus a narrow fix target over a generic "오류를 정정하시오" instruction alone.
-
-The fix target should be concrete enough that the student can identify what to change, and narrow enough that the answer surface stays stable between `problem.ipynb` and `solution.ipynb`.
-
-### Type C: fill in the blanks
-
-Use sparingly for modeling or evaluation steps that benefit from answer placeholders.
-
-This is especially useful when students should complete method names, callback arguments, model-layer fragments, or key exclusion lists inside starter code.
-
-Do not convert a placeholder-based block into a generic blank answer cell during derivation.
-
-### Type D: result interpretation
-
-Use when the student must read a real chart, metric, or table and type the result.
-
-When evidence generation and written interpretation are distinct skills, preserve that split across two answer cells or one code cell plus one written-answer cell.
-
-## Cell Rhythm Guardrail
-
-Before finalizing a question block, ask:
-
-1. Should this block use more than one cell for clarity or grading separation?
-2. Should this block provide bullet guidance instead of one sentence?
-3. Should this block use placeholders or starter code instead of a blank comment cell?
-4. Should this block require a separate written answer cell for the interpreted result?
-5. Should the solution notebook preserve the exact same answer surface and cell roles for this block?
-6. Does this block restate the same task in both the question cell and the guide cell?
-
-If the answer is yes, keep the richer scaffold.
-If question 6 is yes, remove one layer and keep only the non-duplicative version.
-
-## Explicit Failure Patterns
-
-Treat these as structure failures, not minor style issues:
-
-- guide omission in a block that depends on named inputs, outputs, ratios, metrics, or paths
-- a generic comment-only code cell where a guide or starter-code scaffold should exist
-- a duplicated prompt surface where the same subpart instructions appear once in a question bullet list and again in a guide bullet list
-- a bug-fix prompt that does not expose a realistic broken code target
-- a chart-reading question that loses its separate interpretation answer surface
-- `answer_*_blank_*`, `answer_*_model`, or similar helper-answer patterns that are not visible as part of the graded problem structure
-- any post-split evaluation block that drifts from `X_valid`, `y_valid` to train-all or test data without explicit question intent
-
-## Official Section Plan
+## 공식 섹션 계획
 
 ### 1. 데이터 분석 [5~6문항 / 30점]
-
 - 필요한 라이브러리 로딩
 - 데이터 구성 및 특성 파악
 - 데이터 요약과 시각화
 
 ### 2. 데이터 전처리 [4~5문항 / 30점]
-
 - 결측치 및 이상치 처리
 - 데이터 정리
 - 인코딩 또는 스케일링
 - Train/Valid 분리
 
 ### 3. AI 모델링 [4~5문항 / 40점]
-
 - 머신러닝 모델 학습
-- 딥러닝 모델 학습 또는 합리적 대체 문항
+- 딥러닝 모델 학습 (또는 합리적 대체 문항)
 - 모델 성능 평가 및 비교
 - 최종 제출 생성 또는 성능 개선 시각화
 
-## Distribution Strategy
+## 문항 배분 전략
 
-- `5-4-5` is only an anchor pattern, not a fixed rule.
-- Shift by one question within the official ranges when the dataset needs more analysis or preprocessing, such as `6-4-4` or `5-5-4`.
-- Keep the total at `14문항` and the section points at `30/30/40`.
-- Make the modeling section large enough to cover ML, evaluation, and one deep-learning or replacement task.
+- 데이터셋 특성에 따라 `6-4-4` 또는 `5-5-4` 등으로 범주 내에서 조정 가능합니다.
+- 총 `14문항`, 섹션별 배점 `30/30/40`은 엄격히 준수합니다.
 
-## Example 14-Question Flow
+## 데이터셋 적응 가드레일
 
-One common anchor flow is:
+실제 데이터를 먼저 검사하여 다음을 확인하세요:
+- 학습/테스트 행 수
+- 타깃 컬럼 및 ID 컬럼
+- 결측치 비율
+- 범주형 vs 수치형 컬럼
+- 제출 파일 필요 여부
 
-1. Library import
-2. Data loading
-3. Basic data check
-4. Visualization setup
-5. Distribution or relationship analysis
-6. Outlier or ID-column handling
-7. Missing-value handling
-8. Encoding or scaling
-9. Train/valid split
-10. First ML model
-11. Second ML model or feature importance
-12. Metric evaluation and comparison
-13. Deep-learning construction or justified replacement task
-14. Submission generation or learning-curve style follow-up
+검토 없이 일반적인 전처리 레시피를 복사하지 마세요. (예: 거의 모든 행을 삭제하는 `dropna()`, 존재하지 않는 컬럼 시각화 등)
 
-Use this as a canonical rhythm anchor, not a mandatory one-to-one script.
+## 딥러닝 가이드
 
-## Dataset Adaptation Guardrails
+- TensorFlow를 사용할 수 있고 데이터 크기가 적절하다면 최소 하나의 신경망 문항과 관련 평가 문항을 포함합니다.
+- 딥러닝이 부적절한 경우 다른 모델링/해석 문항으로 대체하고 솔루션 노트북에 이유를 적습니다.
+- 아키텍처 제약, 옵티마이저, 손실 함수, 콜백, 에포크 등 핵심 요구사항을 명시합니다.
+- 복잡한 구조의 경우 Mermaid 등으로 작성된 구조도 이미지를 마크다운에 포함합니다.
 
-Inspect the real data first. Confirm:
+## 작성 규칙
 
-- train/test row counts
-- target column
-- likely ID columns
-- missing-value ratios
-- categorical vs numeric columns
-- whether the task expects a submission file
+- 모든 노트북 텍스트는 **한국어**로 작성합니다.
+- 모든 파일은 BOM 없는 **UTF-8**로 저장합니다.
+- 짧고 명확한 명령형(시험 문구)을 사용합니다.
+- 코드는 위에서 아래로 중단 없이 실행 가능해야 합니다.
 
-Do not copy a generic preprocessing recipe without checking its effect.
+## 검증 순서
 
-Avoid:
-
-- `dropna()` when it would remove nearly all rows
-- plotting columns that do not exist
-- unjustified encoding of high-cardinality free text
-- metrics that conflict with the task goal
-
-If the competition exposes an official metric, use it in at least one modeling question when feasible.
-
-When train/valid split has been introduced, keep later model comparison, confusion-matrix, threshold, and deep-learning validation blocks on the `X_valid`, `y_valid` path unless the question explicitly switches to final submission generation.
-
-## Deep Learning Guidance
-
-If TensorFlow is available and the dataset size is reasonable, include at least one neural-network question plus one related evaluation or history-plot question.
-
-If deep learning is unrealistic, replace it with another modeling or interpretation task and explain why in the solution notebook.
-
-When deep learning is included and the question is scaffold-heavy, preserve the same level of guidance:
-
-- setup notice markdown before the graded question
-- dedicated import/setup code cell
-- explicit architecture constraints
-- exact optimizer, loss, metric, callback, epoch, and batch-size requirements when the question design depends on them
-- topology diagram or equivalent visual reference when architecture is part of the graded prompt
-- prefer an image asset rendered from Mermaid source or an equivalent diagram source, then embed it in the notebook markdown so the architecture is visible in both `problem.ipynb` and `solution.ipynb`
-- when starter code asks the student to fill architecture blanks, place the rendered architecture image immediately before the setup notice or starter cell and keep the image consistent with the solution architecture
-- placeholder-based starter code when the student is not expected to write the entire block from scratch
-
-## Writing Rules
-
-- Write notebook text in Korean by default.
-- Save notebooks, markdown files, CSV summaries, and other Korean text artifacts in UTF-8 without BOM.
-- Use concrete paths, file names, columns, and variables once the dataset is known.
-- Keep section labels and point labels explicit.
-- Use short, imperative exam wording.
-- Keep code runnable from top to bottom.
-- Do not optimize away scaffold repetition if that repetition is part of the exam format.
-
-## Verification Preference
-
-Prefer format-first review, then execution-first review.
-
-The default verification flow is:
-
-1. inspect notebook pair structure, section counts, question rhythm, guide density, and answer leakage
-2. confirm the problem and solution notebooks still share the same question order and visible answer surface
-3. execute `solution.ipynb`
-4. inspect notebook-visible outputs such as charts, printed metrics, tables, and saved-file messages
-5. inspect generated artifacts such as submission files or summary CSVs
-6. inspect `problem.ipynb` to ensure scored answer cells are still blank, intentionally incomplete, or intentionally incorrect as designed
-7. perform one final review pass before closing the task, checking naming, section counts, score distribution, answer leakage, notebook flow, and validation-data consistency one more time
-
-A `.py` validator may be used as a thin automation wrapper for notebook execution and artifact checks.
-Avoid writing validators that fully recompute the notebook answers from scratch unless the user explicitly asks for a second independent checker.
+1. **형식 검토:** 노트북 쌍 구조, 문항 수, 리듬, 가이드 밀도, 정답 유출 확인
+2. **동기화 확인:** 문제와 정답 노트북의 문항 순서 및 답안 표면 일치 확인
+3. **실행 확인:** `solution.ipynb` 실행 및 출력물(차트, 지표, 테이블) 검사
+4. **결과물 확인:** 제출 파일이나 요약 CSV 등 생성된 아티팩트 검사
+5. **공백 확인:** `problem.ipynb`의 채점 대상 셀이 의도대로 비어 있거나 스타터 코드 상태인지 확인
+6. **최종 리뷰:** 이름, 배점, 검증 데이터 일관성 등을 마지막으로 점검
