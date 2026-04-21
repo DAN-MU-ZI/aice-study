@@ -165,6 +165,8 @@ y = train_df[<#7-2>].copy()
 
 ## 블록 세트 I: 사전 실행 알림 + 공통 설정
 
+`matplotlib` 또는 `seaborn` 시각화가 포함된 노트북에서는 `koreanize_matplotlib`을 공통 setup 셀에 포함합니다. 한글 폰트를 `plt.rcParams["font.family"]`로 직접 지정하지 않습니다.
+
 ```md
 > **<span style="color:red">다음 문항을 풀기 전에 </span>아래 코드를 먼저 실행하세요.**
 ```
@@ -174,6 +176,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import koreanize_matplotlib
 import warnings
 
 warnings.filterwarnings("ignore")
