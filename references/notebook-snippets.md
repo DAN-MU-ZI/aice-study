@@ -217,6 +217,8 @@ tf.keras.utils.set_random_seed(7)
 ![딥러닝 구조도](assets/deep-learning-architecture.svg)
 ````
 
+구조도는 위처럼 렌더된 `.svg` 이미지로만 삽입합니다. 아래처럼 fenced `text` 또는 `mermaid` 코드블록으로 구조를 설명하지 않습니다.
+
 ```python
 # (코드 셀) starter code의 빈칸을 채우고 실행하세요.
 model = Sequential([
